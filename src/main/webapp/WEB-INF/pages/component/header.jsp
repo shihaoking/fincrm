@@ -13,6 +13,7 @@
     <link rel="apple-touch-icon-precomposed" href="../../statics/amazeui/i/app-icon72x72@2x.png">
     <link rel="stylesheet" href="../../statics/amazeui/css/amazeui.min.css"/>
     <link rel="stylesheet" href="../../statics/amazeui/css/admin.css">
+    <script src="../../statics/js/jquery-1.11.3.js"></script>
 </head>
 <body>
 <!--[if lte IE 9]>

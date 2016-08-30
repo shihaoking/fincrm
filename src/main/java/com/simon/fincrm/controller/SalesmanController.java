@@ -25,8 +25,6 @@ public class SalesmanController {
 
     @RequestMapping("/list")
     public String getList(ModelMap modelMap){
-        logger.info("SalesmanController.getList->request");
-
         List<UserInfoDo> result = userInfo.selectAll(true);
         modelMap.addAttribute("salesmanList", result);
         return "salesman/list";

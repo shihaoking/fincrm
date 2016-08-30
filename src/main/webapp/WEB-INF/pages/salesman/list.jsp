@@ -1,5 +1,5 @@
-<%@include file="../component/header.jsp" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="../component/header.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="am-g">
     <div class="am-u-sm-12 am-u-md-6">
@@ -42,7 +42,7 @@
                         <td><c:out value="${userInfo.id}"></c:out></td>
                         <td><a href="/customer/list?id=<c:out value="${userInfo.id}"></c:out>"><c:out
                                 value="${userInfo.userName}"></c:out></a></td>
-                        <td>56</td>
+                        <td class="customer_count" id="customer_count_<c:out value="${userInfo.id}"></c:out>" item-id="<c:out value="${userInfo.id}"></c:out>">--</td>
                         <td><c:out value="${userInfo.phonenumber}"></c:out></td>
                         <td><c:out value="${userInfo.email}"></c:out></td>
                         <td>
@@ -70,4 +70,5 @@
         </form>
     </div>
 </div>
+<script src="../../statics/js/salesman/list.js"></script>
 <%@include file="../component/footer.jsp" %>

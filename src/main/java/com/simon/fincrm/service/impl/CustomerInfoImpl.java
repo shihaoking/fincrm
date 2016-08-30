@@ -6,6 +6,8 @@ import com.simon.fincrm.service.facade.ICustomerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by jinshihao on 16/8/24.
  */
@@ -29,6 +31,10 @@ public class CustomerInfoImpl implements ICustomerInfo {
 
     public CustomerInfoDo selectByPrimaryKey(Integer id) {
         return customerInfoDao.selectByPrimaryKey(id);
+    }
+
+    public List<CustomerInfoDo> getByCustomerId(Integer customerId) {
+        return customerInfoDao.getByCustomerId(customerId);
     }
 
     public int updateByPrimaryKeySelective(CustomerInfoDo record) {

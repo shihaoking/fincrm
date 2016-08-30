@@ -18,6 +18,14 @@
     from customer_info
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+  <select id="getByCustomerId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    FROM customer_info
+    WHERE EXISTS (SELECT 1 FROM salesman_customer_relation where customer_info.id = salesman_customer_relation.customer_id and salesman_customer_relation.salesman_id = #{id,jdbcType=INTEGER})
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from customer_info
     where id = #{id,jdbcType=INTEGER}

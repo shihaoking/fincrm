@@ -1,6 +1,9 @@
 package com.simon.fincrm.dal.dao;
 
+
 import com.simon.fincrm.dal.model.CustomerInfoDo;
+
+import java.util.List;
 
 public interface CustomerInfoDao {
     int deleteByPrimaryKey(Integer id);
@@ -9,9 +12,13 @@ public interface CustomerInfoDao {
 
     int insertSelective(com.simon.fincrm.dal.model.CustomerInfoDo record);
 
-    com.simon.fincrm.dal.model.CustomerInfoDo selectByPrimaryKey(Integer id);
+    CustomerInfoDo selectByPrimaryKey(Integer id);
+
+    List<CustomerInfoDo> getByCustomerId(Integer id);
 
     int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.CustomerInfoDo record);
 
     int updateByPrimaryKey(com.simon.fincrm.dal.model.CustomerInfoDo record);
+
+
 }
