@@ -2,6 +2,7 @@ package com.simon.fincrm.service.facade;
 
 import com.simon.fincrm.dal.dao.CustomerInfoDao;
 import com.simon.fincrm.dal.model.CustomerInfoDo;
+import com.simon.fincrm.service.result.CustomerInfoWithSalesmanResult;
 import com.sun.jdi.IntegerType;
 
 import java.util.List;
@@ -18,9 +19,13 @@ public interface ICustomerInfo {
 
     com.simon.fincrm.dal.model.CustomerInfoDo selectByPrimaryKey(Integer id);
 
-    List<CustomerInfoDo> getByCustomerId(Integer customerId);
+    List<CustomerInfoDo> getBySalesmanId(Integer customerId);
+
+    List<CustomerInfoDo> selectAll(Boolean status);
 
     int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.CustomerInfoDo record);
 
     int updateByPrimaryKey(com.simon.fincrm.dal.model.CustomerInfoDo record);
+
+    CustomerInfoWithSalesmanResult getCustomerInfoWithSalesman(Integer customerId);
 }

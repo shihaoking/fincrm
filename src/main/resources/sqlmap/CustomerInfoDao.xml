@@ -8,10 +8,21 @@
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="creator" jdbcType="INTEGER" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="status" jdbcType="BIT" property="status"></result>
   </resultMap>
   <sql id="Base_Column_List">
-    id, customer_name, phone_number, email, creator, create_time
+    id, customer_name, phone_number, email, creator, create_time, status
   </sql>
+
+  <select id="selectAll" parameterType="java.lang.Boolean" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    from customer_info
+    <if test="_parameter != null">
+    WHERE status=#{status,jdbcType=BIT}
+    </if>
+  </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -19,11 +30,12 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="getByCustomerId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getBySalesmanId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     FROM customer_info
     WHERE EXISTS (SELECT 1 FROM salesman_customer_relation where customer_info.id = salesman_customer_relation.customer_id and salesman_customer_relation.salesman_id = #{id,jdbcType=INTEGER})
+    AND status =1
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

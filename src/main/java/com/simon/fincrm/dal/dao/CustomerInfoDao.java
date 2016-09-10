@@ -14,11 +14,12 @@ public interface CustomerInfoDao {
 
     CustomerInfoDo selectByPrimaryKey(Integer id);
 
-    List<CustomerInfoDo> getByCustomerId(Integer id);
+    List<CustomerInfoDo> getBySalesmanId(Integer id);
+
+    List<CustomerInfoDo> selectAll(Boolean status);
 
     int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.CustomerInfoDo record);
 
     int updateByPrimaryKey(com.simon.fincrm.dal.model.CustomerInfoDo record);
-
 
 }

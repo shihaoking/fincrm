@@ -11,6 +11,8 @@ public class CustomerInfoDo {
 
     private String email;
 
+    private Boolean status;
+
     private Integer creator;
 
     private Date createTime;
@@ -61,5 +63,13 @@ public class CustomerInfoDo {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }

@@ -29,8 +29,8 @@ public class SalesmanCustomerRelationImpl implements ISalesmanCustomerRelation {
         return salesmanCustomerReationDao.insertSelective(record);
     }
 
-    public SalesmanCustomerRelationDo selectByPrimaryKey(Integer id) {
-        return salesmanCustomerReationDao.selectByPrimaryKey(id);
+    public SalesmanCustomerRelationDo selectByCustomerId(Integer customerId) {
+        return salesmanCustomerReationDao.selectByCustomerId(customerId);
     }
 
     public int updateByPrimaryKeySelective(SalesmanCustomerRelationDo record) {

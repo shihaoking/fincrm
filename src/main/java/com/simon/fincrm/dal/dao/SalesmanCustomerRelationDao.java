@@ -12,7 +12,7 @@ public interface SalesmanCustomerRelationDao {
 
     int insertSelective(SalesmanCustomerRelationDo record);
 
-    SalesmanCustomerRelationDo selectByPrimaryKey(Integer id);
+    SalesmanCustomerRelationDo selectByCustomerId(Integer customerId);
 
     int updateByPrimaryKeySelective(SalesmanCustomerRelationDo record);
 

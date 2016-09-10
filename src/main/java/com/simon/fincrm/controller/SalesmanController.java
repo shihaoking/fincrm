@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -28,5 +30,12 @@ public class SalesmanController {
         List<UserInfoDo> result = userInfo.selectAll(true);
         modelMap.addAttribute("salesmanList", result);
         return "salesman/list";
+    }
+
+    @RequestMapping(value = "/getAllSalesman", method = RequestMethod.GET)
+    @ResponseBody
+    public List<UserInfoDo> getAllSalesman(){
+        List<UserInfoDo> result = userInfo.selectAll(true);
+        return result;
     }
 }

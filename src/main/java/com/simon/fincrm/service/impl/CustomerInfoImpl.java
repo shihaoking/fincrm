@@ -1,8 +1,11 @@
 package com.simon.fincrm.service.impl;
 
 import com.simon.fincrm.dal.dao.CustomerInfoDao;
+import com.simon.fincrm.dal.dao.SalesmanCustomerRelationDao;
 import com.simon.fincrm.dal.model.CustomerInfoDo;
+import com.simon.fincrm.dal.model.SalesmanCustomerRelationDo;
 import com.simon.fincrm.service.facade.ICustomerInfo;
+import com.simon.fincrm.service.result.CustomerInfoWithSalesmanResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,9 @@ public class CustomerInfoImpl implements ICustomerInfo {
 
     @Autowired
     private CustomerInfoDao customerInfoDao;
+
+    @Autowired
+    private SalesmanCustomerRelationDao salesmanCustomerRelationDao;
 
     public int deleteByPrimaryKey(Integer id) {
         return customerInfoDao.deleteByPrimaryKey(id);
@@ -33,8 +39,12 @@ public class CustomerInfoImpl implements ICustomerInfo {
         return customerInfoDao.selectByPrimaryKey(id);
     }
 
-    public List<CustomerInfoDo> getByCustomerId(Integer customerId) {
-        return customerInfoDao.getByCustomerId(customerId);
+    public List<CustomerInfoDo> getBySalesmanId(Integer customerId) {
+        return customerInfoDao.getBySalesmanId(customerId);
+    }
+
+    public List<CustomerInfoDo> selectAll(Boolean status){
+        return  customerInfoDao.selectAll(status);
     }
 
     public int updateByPrimaryKeySelective(CustomerInfoDo record) {
@@ -43,5 +53,27 @@ public class CustomerInfoImpl implements ICustomerInfo {
 
     public int updateByPrimaryKey(CustomerInfoDo record) {
         return customerInfoDao.updateByPrimaryKey(record);
+    }
+
+    public CustomerInfoWithSalesmanResult getCustomerInfoWithSalesman(Integer customerId) {
+        CustomerInfoDo customerInfoDo = customerInfoDao.selectByPrimaryKey(customerId);
+        SalesmanCustomerRelationDo salesmanCustomerRelationDo = salesmanCustomerRelationDao.selectByCustomerId(customerId);
+
+        CustomerInfoWithSalesmanResult result = new CustomerInfoWithSalesmanResult();
+        result.setCustomerId(customerInfoDo.getId());
+        result.setCustomerName(customerInfoDo.getCustomerName());
+        result.setPhoneNumber(customerInfoDo.getPhoneNumber());
+        result.setEmail(customerInfoDo.getEmail());
+        result.setCreator(customerInfoDo.getCreator());
+        result.setCreateTime(customerInfoDo.getCreateTime());
+        result.setStatus(customerInfoDo.getStatus());
+
+        if(salesmanCustomerRelationDo != null) {
+            result.setSalesmanId(salesmanCustomerRelationDo.getSalesmanId());
+        }else {
+            result.setSalesmanId(-1);
+        }
+
+        return result;
     }
 }

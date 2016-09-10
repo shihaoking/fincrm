@@ -31,7 +31,9 @@
     SELECT
     <include refid="Base_Column_List"></include>
     FROM user_info
-    WHERE status=#{status,jdbcType=BIT}
+    <if test="_parameter != null">
+      WHERE status=#{status,jdbcType=BIT}
+    </if>
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

@@ -3,15 +3,17 @@ package com.simon.fincrm.controller;
 import com.simon.fincrm.dal.dao.CustomerInfoDao;
 import com.simon.fincrm.dal.model.CustomerInfoDo;
 import com.simon.fincrm.dal.model.SalesmanCustomerCountDo;
+import com.simon.fincrm.dal.model.SalesmanCustomerRelationDo;
+import com.simon.fincrm.dal.model.UserInfoDo;
 import com.simon.fincrm.service.facade.ICustomerInfo;
 import com.simon.fincrm.service.facade.ISalesmanCustomerRelation;
+import com.simon.fincrm.service.facade.IUserInfo;
+import com.simon.fincrm.service.result.CommonResult;
+import com.simon.fincrm.service.result.CustomerInfoWithSalesmanResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,24 +30,73 @@ public class CustomerController {
     @Autowired
     private ICustomerInfo customerInfo;
 
+    @Autowired
+    private IUserInfo userInfo;
+
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public String getList(ModelMap modelMap, @RequestParam(name = "id", required = false, defaultValue = "-1") int id){
-        if (id != -1){
-            List<CustomerInfoDo>  result = customerInfo.getByCustomerId(id);
-            modelMap.addAttribute("customerList", result);
-            modelMap.addAttribute("customerCount", result.size());
+    public String getList(ModelMap modelMap, @RequestParam(name = "id", required = false, defaultValue = "-1") int id) {
+        List<CustomerInfoDo> result = new ArrayList<CustomerInfoDo>();
+
+        if (id != -1) {
+            result = customerInfo.getBySalesmanId(id);
+
+        }else{
+            result = customerInfo.selectAll(null);
         }
+
+        modelMap.addAttribute("customerList", result);
+        modelMap.addAttribute("customerCount", result.size());
+
+        List<UserInfoDo> salesmanList = userInfo.selectAll(true);
+        modelMap.addAttribute("salesmanList", salesmanList);
+        modelMap.addAttribute("requestSalesmanId", id);
+
         return "customer/list";
     }
 
     @RequestMapping(value = "getCountBySalesmanIds", method = RequestMethod.GET)
     @ResponseBody
-    public List<SalesmanCustomerCountDo> getListByIds(@RequestParam(name = "ids") String ids){
+    public List<SalesmanCustomerCountDo> getListByIds(@RequestParam(name = "ids") String ids) {
         List<SalesmanCustomerCountDo> result = salesmanCustomerRelation.selectCustomerCountBySalesmanIds(ids);
-        if(result == null){
+        if (result == null) {
             return new ArrayList<SalesmanCustomerCountDo>();
         }
 
         return result;
+    }
+
+    @RequestMapping(value = "getCustomerInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomerInfoWithSalesmanResult getCusomterInfo(@RequestParam(name = "id") int id) {
+        CustomerInfoWithSalesmanResult reuslt = customerInfo.getCustomerInfoWithSalesman(id);
+
+        return reuslt;
+    }
+
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult update(@RequestBody CustomerInfoWithSalesmanResult info) {
+        CommonResult commonResult = new CommonResult();
+
+        try {
+            CustomerInfoDo customerInfoDo = new CustomerInfoDo();
+            customerInfoDo.setId(info.getCustomerId());
+            customerInfoDo.setCustomerName(info.getCustomerName());
+            customerInfoDo.setPhoneNumber(info.getPhoneNumber());
+            customerInfoDo.setEmail(info.getEmail());
+            customerInfoDo.setStatus(info.getStatus());
+            customerInfo.updateByPrimaryKeySelective(customerInfoDo);
+
+            SalesmanCustomerRelationDo salesmanCustomerRelationDo = salesmanCustomerRelation.selectByCustomerId(info.getCustomerId());
+            salesmanCustomerRelationDo.setSalesmanId(info.getSalesmanId());
+            salesmanCustomerRelation.updateByPrimaryKeySelective(salesmanCustomerRelationDo);
+        } catch (Exception ex) {
+            commonResult.setSuccess(false);
+            commonResult.setErrorMsg(ex.getMessage());
+            return commonResult;
+        }
+
+        commonResult.setSuccess(true);
+        return commonResult;
     }
 }
