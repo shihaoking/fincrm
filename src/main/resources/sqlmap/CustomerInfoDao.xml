@@ -42,20 +42,17 @@
     delete from customer_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.simon.fincrm.dal.model.CustomerInfoDo">
-    insert into customer_info (id, customer_name, phone_number, 
-      email, creator, create_time
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.simon.fincrm.dal.model.CustomerInfoDo">
+    insert into customer_info (customer_name, phone_number,
+      email, creator, create_time, status
       )
-    values (#{id,jdbcType=INTEGER}, #{customerName,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+    values (#{customerName,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR}, #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.simon.fincrm.dal.model.CustomerInfoDo">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.simon.fincrm.dal.model.CustomerInfoDo">
     insert into customer_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="customerName != null">
         customer_name,
       </if>
@@ -70,6 +67,9 @@
       </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="status != null">
+        status,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -91,6 +91,9 @@
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.simon.fincrm.dal.model.CustomerInfoDo">
@@ -111,6 +114,9 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -120,7 +126,8 @@
       phone_number = #{phoneNumber,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       creator = #{creator,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

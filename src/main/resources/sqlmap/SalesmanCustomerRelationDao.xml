@@ -22,7 +22,7 @@
   <select id="selectCustomerCountBySalesmanIds" parameterType="arraylist" resultMap="CustomerCountOfSalesman">
     SELECT a.salesman_id,COUNT(1) as customer_count
     FROM salesman_customer_relation a
-    WHERE EXISTS (SELECT  1 FROM  customer_info b WHERE a.customer_id = b.id)
+    WHERE EXISTS (SELECT  1 FROM  customer_info b WHERE a.customer_id = b.id and b.status =1)
     AND a.salesman_id IN
     <foreach collection="array" open="(" close=")" index="index" item="item" separator=",">
       #{item}

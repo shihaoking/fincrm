@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Amaze UI Admin index Examples</title>
-    <meta name="description" content="这是一个 index 页面">
+    <title>客户关系管理系统</title>
+    <meta name="description" content="客户关系管理系统">
     <meta name="keywords" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="renderer" content="webkit">
@@ -13,7 +13,9 @@
     <link rel="apple-touch-icon-precomposed" href="../../statics/amazeui/i/app-icon72x72@2x.png">
     <link rel="stylesheet" href="../../statics/amazeui/css/amazeui.min.css"/>
     <link rel="stylesheet" href="../../statics/amazeui/css/admin.css">
+    <link rel="stylesheet" href="../../statics/css/common-base.css">
     <script src="../../statics/js/jquery-1.11.3.js"></script>
+    <script src="../../statics/js/common-base.js"></script>
 </head>
 <body>
 <!--[if lte IE 9]>
@@ -23,7 +25,7 @@
 
 <header class="am-topbar am-topbar-inverse admin-header">
     <div class="am-topbar-brand">
-        <strong>Amaze UI</strong> <small>后台管理</small>
+        <strong>客户关系</strong> <small>管理系统</small>
     </div>
 
     <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>

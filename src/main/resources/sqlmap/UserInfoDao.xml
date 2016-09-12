@@ -40,17 +40,17 @@
     delete from user_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.simon.fincrm.dal.model.UserInfoDo">
+  <insert id="insert" keyProperty="id" parameterType="com.simon.fincrm.dal.model.UserInfoDo">
     insert into user_info (id, user_name, user_pwd, 
       email, birthday, gender, address, 
-      update_time, create_time, phonenumber
+      update_time, create_time, phonenumber, status
       )
     values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userPwd,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{gender,jdbcType=BIT}, #{address,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{phonenumber,jdbcType=VARCHAR}
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{phonenumber,jdbcType=VARCHAR},#{status,jdbcType=BIT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.simon.fincrm.dal.model.UserInfoDo">
+  <insert id="insertSelective" keyProperty="id" parameterType="com.simon.fincrm.dal.model.UserInfoDo">
     insert into user_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -82,6 +82,9 @@
       </if>
       <if test="phonenumber != null">
         phonenumber,
+      </if>
+      <if test="status != null">
+        status,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -115,6 +118,9 @@
       <if test="phonenumber != null">
         #{phonenumber,jdbcType=VARCHAR},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.simon.fincrm.dal.model.UserInfoDo">
@@ -147,6 +153,9 @@
       <if test="phonenumber != null">
         phonenumber = #{phonenumber,jdbcType=VARCHAR},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -160,7 +169,8 @@
       address = #{address,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      phonenumber = #{phonenumber,jdbcType=VARCHAR}
+      phonenumber = #{phonenumber,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
