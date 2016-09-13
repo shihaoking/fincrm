@@ -15,6 +15,10 @@ public interface UserInfoDao {
 
     List<UserInfoDo> selectAll(Boolean status);
 
+    List<UserInfoDo> selectByManageId(Integer managerId);
+
+    List<UserInfoDo> selectByLevelId(Integer levelId);
+
     int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.UserInfoDo record);
 
     int updateByPrimaryKey(com.simon.fincrm.dal.model.UserInfoDo record);

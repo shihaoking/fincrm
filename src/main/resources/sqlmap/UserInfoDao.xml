@@ -16,8 +16,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, user_name, user_pwd, email, birthday, gender, address, update_time, create_time, 
-    phonenumber
+    id, user_name, user_pwd, email, birthday, gender, address, update_time, create_time, phonenumber, status
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -36,11 +35,27 @@
     </if>
   </select>
 
+  <select id="selectByManageId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"></include>
+    FROM user_info
+    WHERE id in (SELECT salesman_id FROM salesman_manager_relation WHERE manager_id=#{manager_id,jdbcType=INTEGER})
+    AND status=1
+  </select>
+
+  <select id="selectByLevelId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"></include>
+    FROM user_info
+    WHERE id IN (SELECT user_id FROM user_level WHERE user_level.level_id=#{level_id,jdbcType=INTEGER})
+    AND status=1
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from user_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" keyProperty="id" parameterType="com.simon.fincrm.dal.model.UserInfoDo">
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.simon.fincrm.dal.model.UserInfoDo">
     insert into user_info (id, user_name, user_pwd, 
       email, birthday, gender, address, 
       update_time, create_time, phonenumber, status
@@ -50,7 +65,7 @@
       #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{phonenumber,jdbcType=VARCHAR},#{status,jdbcType=BIT}
       )
   </insert>
-  <insert id="insertSelective" keyProperty="id" parameterType="com.simon.fincrm.dal.model.UserInfoDo">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.simon.fincrm.dal.model.UserInfoDo">
     insert into user_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
