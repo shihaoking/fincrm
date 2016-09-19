@@ -11,6 +11,8 @@ public interface UserLevelDao {
 
     com.simon.fincrm.dal.model.UserLevelDo selectByPrimaryKey(Integer id);
 
+    UserLevelDo selectByUserId(Integer id);
+
     int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.UserLevelDo record);
 
     int updateByPrimaryKey(com.simon.fincrm.dal.model.UserLevelDo record);

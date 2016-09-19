@@ -21,6 +21,8 @@ public interface ICustomerInfo {
 
     List<CustomerInfoDo> getBySalesmanId(Integer customerId);
 
+    List<CustomerInfoDo> getByManagerId(Integer id);
+
     List<CustomerInfoDo> selectAll(Boolean status);
 
     int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.CustomerInfoDo record);

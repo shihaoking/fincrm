@@ -1,5 +1,5 @@
 <%@ include file="../component/header.jsp" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <div class="am-cf am-padding-left">
     <div class="am-fl am-cf">
         <strong class="am-text-primary am-text-lg">业务员管理</strong>
@@ -82,7 +82,7 @@
 </button>
 <div class="am-modal am-modal-confirm" tabindex="-1" id="confirm-dialog">
     <div class="am-modal-dialog">
-        <div class="am-modal-hd"></div>
+        <div class="am-modal-hd am-text-primary"></div>
         <div class="am-modal-bd">
         </div>
         <div class="am-modal-footer">

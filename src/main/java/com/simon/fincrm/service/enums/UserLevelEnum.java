@@ -10,9 +10,9 @@ package com.simon.fincrm.service.enums;
  */
 public enum UserLevelEnum {
 
-    SALESMAN(1, "销售人员"),
+    ROLE_SALESMAN(1, "销售人员"),
 
-    SALESMAN_MANAGER(9,"经理");
+    ROLE_MANAGER(9,"经理");
 
     /** 等级id*/
     private int leveId;

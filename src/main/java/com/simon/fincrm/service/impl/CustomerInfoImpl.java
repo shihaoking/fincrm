@@ -43,6 +43,10 @@ public class CustomerInfoImpl implements ICustomerInfo {
         return customerInfoDao.getBySalesmanId(customerId);
     }
 
+    public List<CustomerInfoDo> getByManagerId(Integer id) {
+        return customerInfoDao.getByManagerId(id);
+    }
+
     public List<CustomerInfoDo> selectAll(Boolean status){
         return  customerInfoDao.selectAll(status);
     }

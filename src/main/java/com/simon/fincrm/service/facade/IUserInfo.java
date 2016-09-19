@@ -17,6 +17,8 @@ public interface IUserInfo {
 
     UserInfoDo selectByPrimaryKey(Integer id);
 
+    UserInfoDo selectByName(String name);
+
     List<UserInfoDo> selectAll(Boolean status);
 
     List<UserInfoDo> selectByManageId(Integer managerId);

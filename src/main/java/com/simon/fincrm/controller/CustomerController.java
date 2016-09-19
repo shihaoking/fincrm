@@ -4,6 +4,9 @@ import com.simon.fincrm.dal.model.CustomerInfoDo;
 import com.simon.fincrm.dal.model.SalesmanCustomerCountDo;
 import com.simon.fincrm.dal.model.SalesmanCustomerRelationDo;
 import com.simon.fincrm.dal.model.UserInfoDo;
+import com.simon.fincrm.service.UserSecurityUtils;
+import com.simon.fincrm.service.entities.LoginUserInfo;
+import com.simon.fincrm.service.enums.UserLevelEnum;
 import com.simon.fincrm.service.facade.ICustomerInfo;
 import com.simon.fincrm.service.facade.ISalesmanCustomerRelation;
 import com.simon.fincrm.service.facade.IUserInfo;
@@ -36,18 +39,24 @@ public class CustomerController {
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String getList(ModelMap modelMap, @RequestParam(name = "id", required = false, defaultValue = "-1") int id) {
         List<CustomerInfoDo> result = new ArrayList<CustomerInfoDo>();
+        LoginUserInfo loginLoginUserInfo = UserSecurityUtils.getCurrentUser();
 
         if (id != -1) {
             result = customerInfo.getBySalesmanId(id);
 
         }else{
-            result = customerInfo.selectAll(true);
+            if(UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_MANAGER.name())) {
+                result = customerInfo.getByManagerId(loginLoginUserInfo.getUserId());
+            }else if(UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMAN.name())){
+                result = customerInfo.getBySalesmanId(loginLoginUserInfo.getUserId());
+            }
         }
 
         modelMap.addAttribute("customerList", result);
         modelMap.addAttribute("customerCount", result.size());
 
-        List<UserInfoDo> salesmanList = userInfo.selectAll(true);
+        List<UserInfoDo> salesmanList = userInfo.selectByManageId(loginLoginUserInfo.getUserId());
+
         modelMap.addAttribute("salesmanList", salesmanList);
         modelMap.addAttribute("requestSalesmanId", id);
 
@@ -71,6 +80,12 @@ public class CustomerController {
         CustomerInfoWithSalesmanResult reuslt = customerInfo.getCustomerInfoWithSalesman(id);
 
         return reuslt;
+    }
+
+    @RequestMapping(value = "getBySalesmanId", method = RequestMethod.GET)
+    @ResponseBody
+    public List<CustomerInfoDo> getBySalesmanId(@RequestParam("id") int id){
+        return customerInfo.getBySalesmanId(id);
     }
 
     @RequestMapping(value = "update", method = RequestMethod.POST)

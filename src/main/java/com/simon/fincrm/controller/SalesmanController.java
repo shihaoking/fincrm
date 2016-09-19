@@ -3,6 +3,8 @@ package com.simon.fincrm.controller;
 import com.simon.fincrm.dal.model.SalesmanManagerReationDo;
 import com.simon.fincrm.dal.model.UserInfoDo;
 import com.simon.fincrm.dal.model.UserLevelDo;
+import com.simon.fincrm.service.UserSecurityUtils;
+import com.simon.fincrm.service.entities.LoginUserInfo;
 import com.simon.fincrm.service.enums.UserLevelEnum;
 import com.simon.fincrm.service.facade.ISalesmanManagerReation;
 import com.simon.fincrm.service.facade.IUserInfo;
@@ -42,7 +44,9 @@ public class SalesmanController {
 
     @RequestMapping("/list")
     public String getList(ModelMap modelMap) {
-        List<UserInfoDo> result = userInfo.selectByLevelId(1);
+        LoginUserInfo loginLoginUserInfo = UserSecurityUtils.getCurrentUser();
+
+        List<UserInfoDo> result = userInfo.selectByManageId(loginLoginUserInfo.getUserId());
         modelMap.addAttribute("salesmanList", result);
         return "salesman/list";
     }
@@ -58,14 +62,15 @@ public class SalesmanController {
     @RequestMapping(value = "/getAllSalesman", method = RequestMethod.GET)
     @ResponseBody
     public List<UserInfoDo> getAllSalesman() {
-        List<UserInfoDo> result = userInfo.selectByLevelId(UserLevelEnum.SALESMAN.getLeveId());
+        LoginUserInfo loginLoginUserInfo =  UserSecurityUtils.getCurrentUser();
+        List<UserInfoDo> result = userInfo.selectByManageId(loginLoginUserInfo.getUserId());
         return result;
     }
 
     @RequestMapping(value = "/getAllManager", method = RequestMethod.GET)
     @ResponseBody
     public List<UserInfoDo> getAllManager() {
-        List<UserInfoDo> result = userInfo.selectByLevelId(UserLevelEnum.SALESMAN_MANAGER.getLeveId());
+        List<UserInfoDo> result = userInfo.selectByLevelId(UserLevelEnum.ROLE_MANAGER.getLeveId());
         return result;
     }
 

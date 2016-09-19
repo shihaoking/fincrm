@@ -35,6 +35,10 @@ public class UserLevelImpl implements IUserLevel {
         return userLevelDao.selectByPrimaryKey(id);
     }
 
+    public UserLevelDo selectByUserId(Integer id) {
+        return userLevelDao.selectByUserId(id);
+    }
+
     public int updateByPrimaryKeySelective(UserLevelDo record) {
         return userLevelDao.updateByPrimaryKeySelective(record);
     }

@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:/spring/service-impl.xml", "classpath:/spring/spring-mybatis.xml"})
-public class UserInfoTest {
+public class LoginUserInfoTest {
     @Autowired
     private IUserInfo userInfo;
 

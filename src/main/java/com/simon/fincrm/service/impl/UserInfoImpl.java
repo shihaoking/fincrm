@@ -38,6 +38,10 @@ public class UserInfoImpl implements IUserInfo {
         return userInfoDao.selectByPrimaryKey(id);
     }
 
+    public UserInfoDo selectByName(String name) {
+        return userInfoDao.selectByName(name);
+    }
+
     public List<UserInfoDo> selectAll(Boolean status) {
         return userInfoDao.selectAll(status);
     }

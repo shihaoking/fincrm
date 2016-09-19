@@ -50,7 +50,7 @@
   <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.simon.fincrm.dal.model.CustomerTraceLogDo">
     insert into customer_trace_log (customer_id, report_salesman_id, report_info,
       creator, create_time, status)
-    values (#{customerId,jdbcType=INTEGER}, {reportSalesmanId,jdbcType=INTEGER}, #{reportInfo,jdbcType=VARCHAR},
+    values (#{customerId,jdbcType=INTEGER}, #{reportSalesmanId,jdbcType=INTEGER}, #{reportInfo,jdbcType=VARCHAR},
       #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT})
   </insert>
 

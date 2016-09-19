@@ -165,7 +165,7 @@ $(document).ready(function () {
         var $confirmBtn = $confirm.find('[data-am-modal-confirm]');
         var $cancelBtn = $confirm.find('[data-am-modal-cancel]');
 
-        $confirmBtn.off('click.confirm.modal.amui').on('click', function () {
+        $confirmBtn.off('click.confirm.modal.amui').off('click').on('click', function () {
             if (validFormInput('#salesman-info-edit-form') == false) {
                 return false;
             }
@@ -189,7 +189,7 @@ $(document).ready(function () {
             window.location.reload();
         });
 
-        $cancelBtn.off('click.cancel.modal.amui').on('click', function () {
+        $cancelBtn.off('click.cancel.modal.amui').off('click').on('click', function () {
             removeValidDialog();
             return true;
         });
@@ -210,7 +210,7 @@ $(document).ready(function () {
         var $confirmBtn = $confirm.find('[data-am-modal-confirm]');
         var $cancelBtn = $confirm.find('[data-am-modal-cancel]');
 
-        $confirmBtn.off('click.confirm.modal.amui').on('click', function () {
+        $confirmBtn.off('click.confirm.modal.amui').off('click').on('click', function () {
             if (validFormInput('#salesman-info-edit-form') == false) {
                 return false;
             }
@@ -234,7 +234,7 @@ $(document).ready(function () {
             window.location.reload();
         });
 
-        $cancelBtn.off('click.cancel.modal.amui').on('click', function () {
+        $cancelBtn.off('click.cancel.modal.amui').off('click').on('click', function () {
 
             removeValidDialog();
             return true;
