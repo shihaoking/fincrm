@@ -42,6 +42,11 @@
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="fincrmDataSource"></property>
         <property name="mapperLocations" value="classpath:sqlmap/*.xml"></property>
+        <property name="plugins">
+            <array>
+                <bean class="com.simon.fincrm.service.interceptor.PageInterceptor"></bean>
+            </array>
+        </property>
     </bean>
 
     <!-- 配置扫描器 -->

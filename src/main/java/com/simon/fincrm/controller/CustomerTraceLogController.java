@@ -10,6 +10,7 @@ import com.simon.fincrm.service.UserSecurityUtils;
 import com.simon.fincrm.service.enums.UserLevelEnum;
 import com.simon.fincrm.service.facade.ICustomerInfo;
 import com.simon.fincrm.service.facade.ICustomerTraceLog;
+import com.simon.fincrm.service.interceptor.PageInterceptor;
 import com.simon.fincrm.service.result.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,9 +34,14 @@ public class CustomerTraceLogController {
     private ICustomerTraceLog customerReportLog;
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public String getList(ModelMap modelMap, @RequestParam(name = "id") int id, @RequestParam(name = "salesmanId", required = false, defaultValue = "-1") int salesmanId) {
+    public String getList(ModelMap modelMap, @RequestParam(name = "id") int id, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
+
+        PageInterceptor.startPage(pageNum, 20);
 
         List<CustomerTraceLogDo> result = customerReportLog.selectByCustomerId(id);
+
+        PageInterceptor.Page page = PageInterceptor.endPage();
+        modelMap.addAttribute("pageInfo", page);
 
         modelMap.addAttribute("traceLogList", result);
         modelMap.addAttribute("traceLogCount", result.size());

@@ -13,7 +13,6 @@
                 <button type="button" class="am-btn am-btn-default" id="add-customer"><span class="am-icon-plus"></span>
                     新增
                 </button>
-                <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
             </div>
         </div>
     </div>
@@ -22,7 +21,7 @@
             <div class="am-form-group am-margin-bottom-0">
                 <label class="am-form-label" for="salesman-select">业务员：</label>
                 <select data-am-selected="{btnSize: 'sm'}" id="salesman-select">
-                    <option value="-1">所有用户</option>
+                    <option value="-1">所有业务员</option>
                     <c:forEach var="salesmanInfo" items="${salesmanList}">
                         <option value="<c:out value="${salesmanInfo.id}"></c:out>"
                                 <c:if test="${salesmanInfo.id == requestSalesmanId}">selected</c:if>><c:out
@@ -88,21 +87,7 @@
             </c:forEach>
             </tbody>
         </table>
-        <div class="am-cf">
-            共 <c:out value="${customerCount}"></c:out> 条记录
-            <div class="am-fr">
-                <ul class="am-pagination">
-                    <li class="am-disabled"><a href="#">«</a></li>
-                    <li class="am-active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li><a href="#">»</a></li>
-                </ul>
-            </div>
-        </div>
-        <hr/>
+        <%@include file="../component/pager.jsp" %>
     </div>
 </div>
 <!--弹窗窗口-->

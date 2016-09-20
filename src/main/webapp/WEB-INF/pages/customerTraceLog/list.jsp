@@ -18,7 +18,6 @@
                 <button type="button" class="am-btn am-btn-default" id="add-customer-log"><span
                         class="am-icon-plus"></span> 新增
                 </button>
-                <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
             </div>
         </div>
     </div>
@@ -94,20 +93,7 @@
             </c:forEach>
             </tbody>
         </table>
-        <div class="am-cf">
-            共 <c:out value="${traceLogCount}"></c:out> 条记录
-            <div class="am-fr">
-                <ul class="am-pagination">
-                    <li class="am-disabled"><a href="#">«</a></li>
-                    <li class="am-active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li><a href="#">»</a></li>
-                </ul>
-            </div>
-        </div>
+        <%@include file="../component/pager.jsp" %>
         <hr/>
     </div>
 </div>

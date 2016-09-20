@@ -9,16 +9,14 @@ import com.simon.fincrm.service.enums.UserLevelEnum;
 import com.simon.fincrm.service.facade.ISalesmanManagerReation;
 import com.simon.fincrm.service.facade.IUserInfo;
 import com.simon.fincrm.service.facade.IUserLevel;
+import com.simon.fincrm.service.interceptor.PageInterceptor;
 import com.simon.fincrm.service.result.CommonResult;
 import com.simon.fincrm.service.result.SalesmanInfoWithManagerResult;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -31,8 +29,6 @@ import java.util.List;
 @RequestMapping("/salesman")
 public class SalesmanController {
 
-    Logger logger = Logger.getLogger("controller");
-
     @Autowired
     private IUserInfo userInfo;
 
@@ -43,10 +39,17 @@ public class SalesmanController {
     private ISalesmanManagerReation salesmanManagerReation;
 
     @RequestMapping("/list")
-    public String getList(ModelMap modelMap) {
+    public String getList(ModelMap modelMap, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
+
         LoginUserInfo loginLoginUserInfo = UserSecurityUtils.getCurrentUser();
 
+        PageInterceptor.startPage(pageNum, 20);
+
         List<UserInfoDo> result = userInfo.selectByManageId(loginLoginUserInfo.getUserId());
+
+        PageInterceptor.Page page = PageInterceptor.endPage();
+        modelMap.addAttribute("pageInfo", page);
+
         modelMap.addAttribute("salesmanList", result);
         return "salesman/list";
     }
