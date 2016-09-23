@@ -264,7 +264,15 @@ $(document).ready(function () {
             }
         });
 
-    })
+    });
 
+    $('#search-btn').click(function () {
+        var searchTxt = $('#search-text').val();
 
+        if(searchTxt == '') {
+            window.location.href = '/salesman/list';
+        }
+
+        window.location.href = '/salesman/list?name=' + searchTxt;
+    });
 });

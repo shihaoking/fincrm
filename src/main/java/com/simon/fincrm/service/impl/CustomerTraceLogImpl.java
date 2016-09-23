@@ -42,6 +42,15 @@ public class CustomerTraceLogImpl implements ICustomerTraceLog {
         return customerTraceLogDao.selectByCustomerId(customerId);
     }
 
+    public List<CustomerTraceLogDo> selectBySalesmanId(Integer salesmanId) {
+        return customerTraceLogDao.selectBySalesmanId(salesmanId);
+    }
+
+    public List<CustomerTraceLogDo> selectByManagerId(Integer managerId) {
+        return customerTraceLogDao.selectByManagerId(managerId);
+    }
+
+
     public int updateByPrimaryKeySelective(CustomerTraceLogDo record) {
         return customerTraceLogDao.updateByPrimaryKeySelective(record);
     }

@@ -43,6 +43,26 @@
     where customer_id = #{id,jdbcType=INTEGER}
   </select>
 
+  <select id="selectBySalesmanId" parameterType="java.lang.Integer" resultMap="WithSalesmanNameMap">
+    select a.id, a.customer_id, a.report_salesman_id, b.user_name as report_salesman, a.report_info, a.creator, c.user_name as creator_name, a.create_time, a.status
+    from customer_trace_log a
+    join user_info b
+    on b.id = a.report_salesman_id
+    join user_info c
+    on c.id = a.creator
+    where a.report_salesman_id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByManagerId" parameterType="java.lang.Integer" resultMap="WithSalesmanNameMap">
+    select a.id, a.customer_id, a.report_salesman_id, b.user_name as report_salesman, a.report_info, a.creator, c.user_name as creator_name, a.create_time, a.status
+    from customer_trace_log a
+    join user_info b
+    on b.id = a.report_salesman_id
+    join user_info c
+    on c.id = a.creator
+    where a.report_salesman_id IN (SELECT salesman_id from salesman_manager_relation WHERE manager_id =#{id,jdbcType=INTEGER})
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from customer_trace_log
     where id = #{id,jdbcType=INTEGER}

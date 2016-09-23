@@ -3,6 +3,7 @@
 
 <div class="am-cf am-padding-left">
     <div class="am-fl am-cf">
+        <span class="am-icon-users am-text-primary"></span>
         <strong class="am-text-primary am-text-lg">客户管理</strong>
     </div>
 </div>
@@ -24,8 +25,7 @@
                     <option value="-1">所有业务员</option>
                     <c:forEach var="salesmanInfo" items="${salesmanList}">
                         <option value="<c:out value="${salesmanInfo.id}"></c:out>"
-                                <c:if test="${salesmanInfo.id == requestSalesmanId}">selected</c:if>><c:out
-                                value="${salesmanInfo.userName}"></c:out></option>
+                                <c:if test="${salesmanInfo.id == requestSalesmanId}">selected</c:if>><c:out value="${salesmanInfo.userName}"></c:out></option>
                     </c:forEach>
                 </select>
             </div>
@@ -33,9 +33,9 @@
     </sec:authorize>
     <div class="am-u-sm-12 am-u-md-3">
         <div class="am-input-group am-input-group-sm">
-            <input type="text" class="am-form-field">
+            <input type="text" class="am-form-field" id="search-text" value="${param.get("name")}" placeholder="输入客户姓名">
             <span class="am-input-group-btn">
-            <button class="am-btn am-btn-default" type="button">搜索</button>
+            <button class="am-btn am-btn-default" type="button" id="search-btn">搜索</button>
           </span>
         </div>
     </div>
@@ -74,7 +74,7 @@
                                 </button>
                                 <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><a class="am-link-black"
                                                                                                    href="/customerTraceLog/list?id=<c:out value="${customerInfo.id}"></c:out>"><span
-                                        class="am-icon-book"></span> 记录</a>
+                                        class="am-icon-book"></span> 笔记</a>
                                 </button>
                                 <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only am-btn-delete"
                                         item-id="<c:out value="${customerInfo.id}"></c:out>"><span

@@ -2,6 +2,8 @@ package com.simon.fincrm.dal.dao;
 
 
 import com.simon.fincrm.dal.model.CustomerInfoDo;
+import com.simon.fincrm.dal.model.CustomerTraceLogDo;
+import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
 
 import java.util.List;
 
@@ -19,6 +21,10 @@ public interface CustomerInfoDao {
     List<CustomerInfoDo> getByManagerId(Integer id);
 
     List<CustomerInfoDo> selectAll(Boolean status);
+
+    List<CustomerInfoDo> getBySalesmanIdAndCustomerName(SearchWithIdAndNameRequest request);
+
+    List<CustomerInfoDo> getByManagerIdAndCustomerName(SearchWithIdAndNameRequest request);
 
     int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.CustomerInfoDo record);
 

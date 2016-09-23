@@ -3,6 +3,7 @@ package com.simon.fincrm.service.impl;
 import com.simon.fincrm.dal.dao.SalesmanManagerReationDao;
 import com.simon.fincrm.dal.dao.UserInfoDao;
 import com.simon.fincrm.dal.model.SalesmanManagerReationDo;
+import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
 import com.simon.fincrm.dal.model.UserInfoDo;
 import com.simon.fincrm.service.facade.IUserInfo;
 import com.simon.fincrm.service.result.SalesmanInfoWithManagerResult;
@@ -52,6 +53,10 @@ public class UserInfoImpl implements IUserInfo {
 
     public List<UserInfoDo> selectByLevelId(Integer levelId) {
         return userInfoDao.selectByLevelId(levelId);
+    }
+
+    public List<UserInfoDo> selectByManageIdAndSalesmanName(SearchWithIdAndNameRequest request) {
+        return userInfoDao.selectByManageIdAndSalesmanName(request);
     }
 
     public int updateByPrimaryKeySelective(UserInfoDo record) {

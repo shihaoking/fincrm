@@ -2,6 +2,7 @@
 
 <div class="am-cf am-padding-left">
     <div class="am-fl am-cf">
+        <span class="am-icon-user-secret am-text-primary"></span>
         <strong class="am-text-primary am-text-lg">业务员管理</strong>
     </div>
 </div>
@@ -15,9 +16,9 @@
     </div>
     <div class="am-u-sm-12 am-u-md-3">
         <div class="am-input-group am-input-group-sm">
-            <input type="text" class="am-form-field">
+            <input type="text" class="am-form-field" id="search-text" value="${param.get("name")}" placeholder="输入销售员姓名">
             <span class="am-input-group-btn">
-            <button class="am-btn am-btn-default" type="button">搜索</button>
+            <button class="am-btn am-btn-default" type="button" id="search-btn">搜索</button>
           </span>
         </div>
     </div>

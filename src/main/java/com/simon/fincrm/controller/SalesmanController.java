@@ -1,6 +1,8 @@
 package com.simon.fincrm.controller;
 
+import com.alibaba.druid.util.StringUtils;
 import com.simon.fincrm.dal.model.SalesmanManagerReationDo;
+import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
 import com.simon.fincrm.dal.model.UserInfoDo;
 import com.simon.fincrm.dal.model.UserLevelDo;
 import com.simon.fincrm.service.UserSecurityUtils;
@@ -39,13 +41,21 @@ public class SalesmanController {
     private ISalesmanManagerReation salesmanManagerReation;
 
     @RequestMapping("/list")
-    public String getList(ModelMap modelMap, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
+    public String getList(ModelMap modelMap,@RequestParam(name = "name", required =  false) String searchName, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
 
         LoginUserInfo loginLoginUserInfo = UserSecurityUtils.getCurrentUser();
 
         PageInterceptor.startPage(pageNum, 20);
 
-        List<UserInfoDo> result = userInfo.selectByManageId(loginLoginUserInfo.getUserId());
+        List<UserInfoDo> result;
+        if(StringUtils.isEmpty(searchName)) {
+            result = userInfo.selectByManageId(loginLoginUserInfo.getUserId());
+        }else{
+            SearchWithIdAndNameRequest request = new SearchWithIdAndNameRequest();
+            request.setId(loginLoginUserInfo.getUserId());
+            request.setName(searchName);
+            result = userInfo.selectByManageIdAndSalesmanName(request);
+        }
 
         PageInterceptor.Page page = PageInterceptor.endPage();
         modelMap.addAttribute("pageInfo", page);

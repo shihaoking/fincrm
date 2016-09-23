@@ -143,7 +143,7 @@ $(function () {
     $('#customer-tracelog-table').find('.am-btn-edit').on('click', function () {
         removeValidDialog();
         var relatedTarget = this;
-        $('#confirm-dialog').find('.am-modal-hd').text('修改跟踪日志');
+        $('#confirm-dialog').find('.am-modal-hd').text('修改笔记');
         $('#confirm-dialog').find('.am-modal-bd').empty();
         $('#confirm-dialog').find('.am-modal-bd').append(customerInfoEditForm.clone());
 
@@ -188,7 +188,7 @@ $(function () {
     $('#add-customer-log').click(function () {
         removeValidDialog();
 
-        $('#confirm-dialog').find('.am-modal-hd').text('添加跟踪日志');
+        $('#confirm-dialog').find('.am-modal-hd').text('添加笔记');
         $('#confirm-dialog').find('.am-modal-bd').empty();
         $('#confirm-dialog').find('.am-modal-bd').append(customerInfoEditForm.clone());
         $('#confirm-dialog').modal();

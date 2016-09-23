@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>客户关系管理系统</title>
+    <title>数米管理后台</title>
     <meta name="description" content="客户关系管理系统">
     <meta name="keywords" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -66,10 +66,12 @@
             <ul class="am-list admin-sidebar-list">
                 <li><a href="/"><span class="am-icon-home"></span><span class="admin-nav-title">首页</span></a></li>
                 <sec:authorize access="hasRole('ROLE_MANAGER')">
-                    <li><a href="/salesman/list"><span class="am-icon-table"></span><span
+                    <li><a href="/salesman/list"><span class="am-icon-user-secret"></span><span
                             class="admin-nav-title">业务员</span></a></li>
                 </sec:authorize>
-                <li><a href="/customer/list"><span class="am-icon-users"></span><span class="admin-nav-title">客户</span></a>
+                <li><a href="/customer/list"><span class="am-icon-users"></span><span class="admin-nav-title">客户管理</span></a>
+                </li>
+                <li><a href="/customerTraceLog/list"><span class="am-icon-book"></span><span class="admin-nav-title">客户笔记</span></a>
                 </li>
             </ul>
         </div>

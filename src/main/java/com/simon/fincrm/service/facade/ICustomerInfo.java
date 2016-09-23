@@ -2,6 +2,8 @@ package com.simon.fincrm.service.facade;
 
 import com.simon.fincrm.dal.dao.CustomerInfoDao;
 import com.simon.fincrm.dal.model.CustomerInfoDo;
+import com.simon.fincrm.dal.model.CustomerTraceLogDo;
+import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
 import com.simon.fincrm.service.result.CustomerInfoWithSalesmanResult;
 import com.sun.jdi.IntegerType;
 
@@ -20,6 +22,11 @@ public interface ICustomerInfo {
     com.simon.fincrm.dal.model.CustomerInfoDo selectByPrimaryKey(Integer id);
 
     List<CustomerInfoDo> getBySalesmanId(Integer customerId);
+
+    List<CustomerInfoDo> getBySalesmanIdAndCustomerName(SearchWithIdAndNameRequest request);
+
+    List<CustomerInfoDo> getByManagerIdAndCustomerName(SearchWithIdAndNameRequest request);
+
 
     List<CustomerInfoDo> getByManagerId(Integer id);
 

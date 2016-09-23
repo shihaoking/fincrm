@@ -3,7 +3,9 @@ package com.simon.fincrm.service.impl;
 import com.simon.fincrm.dal.dao.CustomerInfoDao;
 import com.simon.fincrm.dal.dao.SalesmanCustomerRelationDao;
 import com.simon.fincrm.dal.model.CustomerInfoDo;
+import com.simon.fincrm.dal.model.CustomerTraceLogDo;
 import com.simon.fincrm.dal.model.SalesmanCustomerRelationDo;
+import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
 import com.simon.fincrm.service.facade.ICustomerInfo;
 import com.simon.fincrm.service.result.CustomerInfoWithSalesmanResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,14 @@ public class CustomerInfoImpl implements ICustomerInfo {
         return customerInfoDao.getBySalesmanId(customerId);
     }
 
+    public List<CustomerInfoDo> getBySalesmanIdAndCustomerName(SearchWithIdAndNameRequest request) {
+        return customerInfoDao.getBySalesmanIdAndCustomerName(request);
+    }
+
+    public List<CustomerInfoDo> getByManagerIdAndCustomerName(SearchWithIdAndNameRequest request) {
+        return customerInfoDao.getByManagerIdAndCustomerName(request);
+    }
+
     public List<CustomerInfoDo> getByManagerId(Integer id) {
         return customerInfoDao.getByManagerId(id);
     }
@@ -80,4 +90,6 @@ public class CustomerInfoImpl implements ICustomerInfo {
 
         return result;
     }
+
+
 }

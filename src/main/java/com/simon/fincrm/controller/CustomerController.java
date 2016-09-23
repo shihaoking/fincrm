@@ -1,9 +1,7 @@
 package com.simon.fincrm.controller;
 
-import com.simon.fincrm.dal.model.CustomerInfoDo;
-import com.simon.fincrm.dal.model.SalesmanCustomerCountDo;
-import com.simon.fincrm.dal.model.SalesmanCustomerRelationDo;
-import com.simon.fincrm.dal.model.UserInfoDo;
+import com.alibaba.druid.util.StringUtils;
+import com.simon.fincrm.dal.model.*;
 import com.simon.fincrm.service.UserSecurityUtils;
 import com.simon.fincrm.service.entities.LoginUserInfo;
 import com.simon.fincrm.service.enums.UserLevelEnum;
@@ -40,19 +38,39 @@ public class CustomerController {
     private IUserInfo userInfo;
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public String getList(ModelMap modelMap, @RequestParam(name = "id", required = false, defaultValue = "-1") int id, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
+    public String getList(ModelMap modelMap, @RequestParam(name = "id", required = false, defaultValue = "-1") int id, @RequestParam(name = "name", required = false) String name, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
         List<CustomerInfoDo> result = new ArrayList<CustomerInfoDo>();
         LoginUserInfo loginLoginUserInfo = UserSecurityUtils.getCurrentUser();
         PageInterceptor.startPage(pageNum, 20);
 
         if (id != -1) {
-            result = customerInfo.getBySalesmanId(id);
+            if(StringUtils.isEmpty(name)) {
+                result = customerInfo.getBySalesmanId(id);
+            }else {
+                SearchWithIdAndNameRequest request = new SearchWithIdAndNameRequest();
+                request.setId(id);
+                request.setName(name);
+                result = customerInfo.getBySalesmanIdAndCustomerName(request);
+            }
 
         } else {
-            if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_MANAGER.name())) {
-                result = customerInfo.getByManagerId(loginLoginUserInfo.getUserId());
-            } else if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMAN.name())) {
-                result = customerInfo.getBySalesmanId(loginLoginUserInfo.getUserId());
+
+            if(StringUtils.isEmpty(name)) {
+                if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_MANAGER.name())) {
+                    result = customerInfo.getByManagerId(loginLoginUserInfo.getUserId());
+                }else{
+                    result = customerInfo.getBySalesmanId(loginLoginUserInfo.getUserId());
+                }
+            }else{
+                SearchWithIdAndNameRequest request = new SearchWithIdAndNameRequest();
+                request.setId(loginLoginUserInfo.getUserId());
+                request.setName(name);
+
+                if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_MANAGER.name())) {
+                    result = customerInfo.getByManagerIdAndCustomerName(request);
+                }else{
+                    result = customerInfo.getBySalesmanIdAndCustomerName(request);
+                }
             }
         }
 

@@ -6,13 +6,16 @@
 
 <div class="am-cf am-padding-left">
     <div class="am-fl am-cf">
-        <strong class="am-text-primary am-text-lg">客户操作日志</strong>
-        -
-        <small>${customerInfo.customerName}</small>
+        <span class="am-icon-book am-text-primary"></span>
+        <strong class="am-text-primary am-text-lg">客户笔记</strong>
+        <c:if test="${not empty customerInfo.customerName}">
+            -
+            <small>${customerInfo.customerName}</small>
+        </c:if>
     </div>
 </div>
 <div class="am-g am-margin-top">
-    <div class="am-u-sm-12 am-u-md-5">
+    <div class="am-u-sm-12 am-u-md-8">
         <div class="am-btn-toolbar">
             <div class="am-btn-group am-btn-group-xs">
                 <button type="button" class="am-btn am-btn-default" id="add-customer-log"><span
@@ -22,7 +25,7 @@
         </div>
     </div>
     <div class="am-u-sm-12 am-u-md-4">
-        <div class="am-form-group am-margin-bottom-0">
+        <div class="am-form-group am-margin-bottom-0 am-text-right">
             <label class="am-form-label" for="customer-filter-select">客户：</label>
             <select data-am-selected="{btnSize: 'sm'}" id="customer-filter-select">
                 <option value="-1">所有客户</option>
@@ -34,14 +37,6 @@
             </select>
         </div>
     </div>
-    <div class="am-u-sm-12 am-u-md-3">
-        <div class="am-input-group am-input-group-sm">
-            <input type="text" class="am-form-field">
-            <span class="am-input-group-btn">
-            <button class="am-btn am-btn-default" type="button">搜索</button>
-          </span>
-        </div>
-    </div>
 </div>
 <div class="am-g">
     <div class="am-u-sm-12">
@@ -51,7 +46,7 @@
                 <th class="table-check"><input type="checkbox"/></th>
                 <th class="table-id">ID</th>
                 <th class="table-title">销售人员</th>
-                <th class="table-type">日志内容</th>
+                <th class="table-type">笔记内容</th>
                 <th class="table-author am-hide-sm-only">创建人</th>
                 <th class="table-date am-hide-sm-only">创建时间</th>
                 <th class="table-set">操作</th>

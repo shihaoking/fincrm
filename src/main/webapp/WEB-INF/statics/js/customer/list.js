@@ -250,6 +250,24 @@ $(function () {
 
             }
         });
+    });
 
-    })
+    $('#search-btn').click(function () {
+        var searchTxt = $('#search-text').val();
+        var idRequestVal = getUrlParam('id');
+
+        if(searchTxt == ''){
+            if(idRequestVal == null){
+                window.location.href = '/customer/list';
+            }else{
+                window.location.href = '/customer/list?id=' + idRequestVal;
+            }
+        }
+
+        if(idRequestVal == null){
+            window.location.href = '/customer/list?name=' + searchTxt;
+        }else{
+            window.location.href = '/customer/list?id=' + idRequestVal + '&name=' + searchTxt;
+        }
+    });
 });

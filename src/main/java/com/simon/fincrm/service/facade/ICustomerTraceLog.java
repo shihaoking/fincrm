@@ -18,6 +18,10 @@ public interface ICustomerTraceLog {
 
     List<CustomerTraceLogDo> selectByCustomerId(Integer customerId);
 
+    List<CustomerTraceLogDo> selectBySalesmanId(Integer salesmanId);
+
+    List<CustomerTraceLogDo> selectByManagerId(Integer managerId);
+
     int updateByPrimaryKeySelective(CustomerTraceLogDo record);
 
     int updateByPrimaryKey(CustomerTraceLogDo record);

@@ -1,5 +1,6 @@
 package com.simon.fincrm.service.facade;
 
+import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
 import com.simon.fincrm.dal.model.UserInfoDo;
 import com.simon.fincrm.service.result.SalesmanInfoWithManagerResult;
 
@@ -24,6 +25,8 @@ public interface IUserInfo {
     List<UserInfoDo> selectByManageId(Integer managerId);
 
     List<UserInfoDo> selectByLevelId(Integer levelId);
+
+    List<UserInfoDo> selectByManageIdAndSalesmanName(SearchWithIdAndNameRequest request);
 
     int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.UserInfoDo record);
 

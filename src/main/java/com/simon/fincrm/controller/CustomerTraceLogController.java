@@ -34,11 +34,21 @@ public class CustomerTraceLogController {
     private ICustomerTraceLog customerReportLog;
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public String getList(ModelMap modelMap, @RequestParam(name = "id") int id, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
+    public String getList(ModelMap modelMap, @RequestParam(name = "id", defaultValue = "-1") int id, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
 
         PageInterceptor.startPage(pageNum, 20);
 
-        List<CustomerTraceLogDo> result = customerReportLog.selectByCustomerId(id);
+        List<CustomerTraceLogDo> result;
+        if(id == -1){
+            if(UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_MANAGER.name())){
+                result = customerReportLog.selectByManagerId(UserSecurityUtils.getCurrentUserId());
+            }else {
+                result = customerReportLog.selectBySalesmanId(UserSecurityUtils.getCurrentUserId());
+            }
+        }else {
+            result = customerReportLog.selectByCustomerId(id);
+        }
+
 
         PageInterceptor.Page page = PageInterceptor.endPage();
         modelMap.addAttribute("pageInfo", page);

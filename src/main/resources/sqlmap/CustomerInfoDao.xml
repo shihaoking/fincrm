@@ -38,6 +38,15 @@
     AND status =1
   </select>
 
+  <select id="getBySalesmanIdAndCustomerName" parameterType="com.simon.fincrm.dal.model.SearchWithIdAndNameRequest" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    FROM customer_info
+    WHERE EXISTS (SELECT 1 FROM salesman_customer_relation where customer_info.id = salesman_customer_relation.customer_id and salesman_customer_relation.salesman_id = #{id,jdbcType=INTEGER})
+    AND status =1
+    AND customer_name like CONCAT('%',#{name},'%')
+  </select>
+
   <select id="getByManagerId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -45,6 +54,16 @@
     WHERE id  in (SELECT customer_id FROM salesman_customer_relation, user_info where salesman_id in(SELECT salesman_id from salesman_manager_relation where manager_id = #{id,jdbcType=INTEGER})
                   and salesman_customer_relation.salesman_id = user_info.id and user_info.status=1)
     AND status =1
+  </select>
+
+  <select id="getByManagerIdAndCustomerName" parameterType="com.simon.fincrm.dal.model.SearchWithIdAndNameRequest" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    FROM customer_info
+    WHERE id  in (SELECT customer_id FROM salesman_customer_relation, user_info where salesman_id in(SELECT salesman_id from salesman_manager_relation where manager_id = #{id,jdbcType=INTEGER})
+    and salesman_customer_relation.salesman_id = user_info.id and user_info.status=1)
+    AND status =1
+    AND customer_name like CONCAT('%',#{name},'%')
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

@@ -1,6 +1,7 @@
 package com.simon.fincrm.dal.dao;
 
 
+import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
 import com.simon.fincrm.dal.model.UserInfoDo;
 import java.util.List;
 
@@ -20,6 +21,8 @@ public interface UserInfoDao {
     List<UserInfoDo> selectByManageId(Integer managerId);
 
     List<UserInfoDo> selectByLevelId(Integer levelId);
+
+    List<UserInfoDo> selectByManageIdAndSalesmanName(SearchWithIdAndNameRequest request);
 
     int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.UserInfoDo record);
 
