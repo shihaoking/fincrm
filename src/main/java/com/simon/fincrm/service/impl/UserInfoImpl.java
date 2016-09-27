@@ -59,6 +59,10 @@ public class UserInfoImpl implements IUserInfo {
         return userInfoDao.selectByManageIdAndSalesmanName(request);
     }
 
+    public List<UserInfoDo> selectByLevelIdAndName(SearchWithIdAndNameRequest request) {
+        return userInfoDao.selectByLevelIdAndName(request);
+    }
+
     public int updateByPrimaryKeySelective(UserInfoDo record) {
         return userInfoDao.updateByPrimaryKeySelective(record);
     }

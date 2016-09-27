@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <sec:authorize access="hasRole('ROLE_MANAGER')">
+    <sec:authorize access="hasRole('ROLE_SALESMANAGER')">
         <div class="am-u-sm-12 am-u-md-4">
             <div class="am-form-group am-margin-bottom-0">
                 <label class="am-form-label" for="salesman-select">业务员：</label>

@@ -1,7 +1,11 @@
+/**
+ * Alipay.com Inc.
+ * Copyright (c) 2004-2016 All Rights Reserved.
+ */
 package com.simon.fincrm.controller;
 
 import com.alibaba.druid.util.StringUtils;
-import com.simon.fincrm.dal.model.SalesmanManagerReationDo;
+import com.simon.fincrm.dal.model.CustomerInfoDo;
 import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
 import com.simon.fincrm.dal.model.UserInfoDo;
 import com.simon.fincrm.dal.model.UserLevelDo;
@@ -14,7 +18,6 @@ import com.simon.fincrm.service.facade.IUserLevel;
 import com.simon.fincrm.service.interceptor.PageInterceptor;
 import com.simon.fincrm.service.result.CommonResult;
 import com.simon.fincrm.service.result.SalesmanInfoWithManagerResult;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,72 +26,46 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 
-
 /**
- * Created by jinshihao on 16/8/23.
+ * @author jinshihao
+ * @version $Id: ManagerController.java, v 0.1 2016-09-27 15:03 jinshihao Exp $$
  */
 @Controller
-@RequestMapping("/salesman")
-public class SalesmanController extends UserInfoBaseController {
-
+@RequestMapping("/salesmanager")
+public class SalesManagerController extends UserInfoBaseController {
     @Autowired
     private IUserInfo userInfo;
 
     @Autowired
     private IUserLevel userLevel;
 
-    @Autowired
-    private ISalesmanManagerReation salesmanManagerReation;
 
     @RequestMapping("/list")
-    public String getList(ModelMap modelMap, @RequestParam(name = "id", required =  false, defaultValue = "-1") int id, @RequestParam(name = "name", required =  false) String searchName, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
-
-        LoginUserInfo loginLoginUserInfo = UserSecurityUtils.getCurrentUser();
+    public String getList(ModelMap modelMap, @RequestParam(name = "name", required =  false) String searchName, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
 
         PageInterceptor.startPage(pageNum, 20);
 
         List<UserInfoDo> result;
-        if (id == -1) {
-            id = loginLoginUserInfo.getUserId();
-        }
-
-        if (StringUtils.isEmpty(searchName)) {
-            result = userInfo.selectByManageId(id);
-        } else {
+        if(StringUtils.isEmpty(searchName)) {
+            result = userInfo.selectByLevelId(UserLevelEnum.ROLE_SALESMANAGER.getLeveId());
+        }else{
             SearchWithIdAndNameRequest request = new SearchWithIdAndNameRequest();
-            request.setId(id);
+            request.setId(UserLevelEnum.ROLE_SALESMANAGER.getLeveId());
             request.setName(searchName);
-            result = userInfo.selectByManageIdAndSalesmanName(request);
+            result = userInfo.selectByLevelIdAndName(request);
         }
-
 
         PageInterceptor.Page page = PageInterceptor.endPage();
         modelMap.addAttribute("pageInfo", page);
 
-        modelMap.addAttribute("salesmanList", result);
-        return "salesman/list";
+        modelMap.addAttribute("managerList", result);
+        return "salesmanager/list";
     }
 
-    @RequestMapping(value = "/getSalesmanInfo", method = RequestMethod.GET)
+    @RequestMapping(value = "/getSalesManagerInfo", method = RequestMethod.GET)
     @ResponseBody
-    public SalesmanInfoWithManagerResult getSalesmanInfo(int id) {
-        SalesmanInfoWithManagerResult result = userInfo.getSalesmanInfoWithManager(id);
-
-        return result;
-    }
-
-    @RequestMapping(value = "/getAllSalesman", method = RequestMethod.GET)
-    @ResponseBody
-    public List<UserInfoDo> getAllSalesman() {
-        LoginUserInfo loginLoginUserInfo =  UserSecurityUtils.getCurrentUser();
-        List<UserInfoDo> result = userInfo.selectByManageId(loginLoginUserInfo.getUserId());
-        return result;
-    }
-
-    @RequestMapping(value = "/getAllManager", method = RequestMethod.GET)
-    @ResponseBody
-    public List<UserInfoDo> getAllManager() {
-        List<UserInfoDo> result = userInfo.selectByLevelId(UserLevelEnum.ROLE_SALESMANAGER.getLeveId());
+    public UserInfoDo getSalesmanInfo(int id) {
+        UserInfoDo result = userInfo.selectByPrimaryKey(id);
         return result;
     }
 
@@ -110,10 +87,6 @@ public class SalesmanController extends UserInfoBaseController {
             userInfoDo.setStatus(info.getStatus());
 
             userInfo.updateByPrimaryKeySelective(userInfoDo);
-
-            SalesmanManagerReationDo salesmanManagerReationDo = salesmanManagerReation.selectBySalesmanId(info.getSalesmanId());
-            salesmanManagerReationDo.setManagerId(info.getManagerId());
-            salesmanManagerReation.updateByPrimaryKey(salesmanManagerReationDo);
 
         } catch (Exception ex) {
             commonResult.setSuccess(false);
@@ -143,13 +116,8 @@ public class SalesmanController extends UserInfoBaseController {
             userInfoDo.setCreateTime(new Date());
             userInfo.insertSelective(userInfoDo);
 
-            SalesmanManagerReationDo salesmanManagerReationDo = new SalesmanManagerReationDo();
-            salesmanManagerReationDo.setSalesmanId(userInfoDo.getId());
-            salesmanManagerReationDo.setManagerId(info.getManagerId());
-            salesmanManagerReation.insertSelective(salesmanManagerReationDo);
-
             UserLevelDo userLevelDo = new UserLevelDo();
-            userLevelDo.setLevelId(UserLevelEnum.ROLE_SALESMAN.getLeveId());
+            userLevelDo.setLevelId(UserLevelEnum.ROLE_SALESMANAGER.getLeveId());
             userLevelDo.setUserId(userInfoDo.getId());
             userLevel.insert(userLevelDo);
 

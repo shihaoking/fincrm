@@ -11,18 +11,15 @@
         <security:csrf disabled="true"></security:csrf>
         <security:remember-me key="remeber_me" use-secure-cookie="true"></security:remember-me>
         <security:intercept-url pattern="/statics/**" access="permitAll"></security:intercept-url>
+        <security:intercept-url pattern="/manager/**" access="hasRole('ROLE_ADMIN')"></security:intercept-url>
         <security:intercept-url pattern="/salesman/getALLSalesman" access="isAuthenticated()"></security:intercept-url>
-        <security:intercept-url pattern="/salesman/**" access="hasRole('ROLE_MANAGER')"></security:intercept-url>
+        <security:intercept-url pattern="/salesman/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_SALESMANAGER')"></security:intercept-url>
+        <security:intercept-url pattern="/customer/**" access="isAuthenticated()"></security:intercept-url>
+        <security:intercept-url pattern="/customerTraceLog/**" access="isAuthenticated()"></security:intercept-url>
         <security:intercept-url pattern="/**" access="isAuthenticated()"></security:intercept-url>
         <security:logout></security:logout>
         <security:http-basic />
     </security:http>
-
-    <!--<security:jdbc-user-service-->
-            <!--id="userService"-->
-            <!--data-source-ref="fincrmDataSource"-->
-            <!--users-by-username-query="SELECT  user_name as username,user_pwd as password,status as enabled FROM user_info where user_info.user_name = ?"-->
-            <!--authorities-by-username-query="SELECT  user_info.user_name,level_info.level_name FROM user_info,user_level,level_info WHERE user_info.user_name=? AND user_info.id = user_level.user_id AND user_level.level_id = level_info.id;" />-->
 
     <security:authentication-manager>
         <security:authentication-provider user-service-ref="userDetailsService">

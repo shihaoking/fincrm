@@ -60,6 +60,15 @@
     AND status=1
   </select>
 
+  <select id="selectByLevelIdAndName" parameterType="com.simon.fincrm.dal.model.SearchWithIdAndNameRequest" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"></include>
+    FROM user_info
+    WHERE id IN (SELECT user_id FROM user_level WHERE user_level.level_id=#{id,jdbcType=INTEGER})
+    AND status=1
+    AND user_name like CONCAT('%',#{name},'%')
+  </select>
+
   <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List"></include>

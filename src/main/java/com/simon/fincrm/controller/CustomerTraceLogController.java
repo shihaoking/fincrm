@@ -40,7 +40,7 @@ public class CustomerTraceLogController {
 
         List<CustomerTraceLogDo> result;
         if(id == -1){
-            if(UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_MANAGER.name())){
+            if(UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMANAGER.name())){
                 result = customerReportLog.selectByManagerId(UserSecurityUtils.getCurrentUserId());
             }else {
                 result = customerReportLog.selectBySalesmanId(UserSecurityUtils.getCurrentUserId());
@@ -59,7 +59,7 @@ public class CustomerTraceLogController {
         CustomerInfoDo customerInfoDo = customerInfo.selectByPrimaryKey(id);
         modelMap.addAttribute("customerInfo", customerInfoDo);
 
-        if(UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_MANAGER.name())){
+        if(UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMANAGER.name())){
             List<CustomerInfoDo> customerInfoDoList =  customerInfo.getByManagerId(UserSecurityUtils.getCurrentUserId());
             modelMap.addAttribute("customerList", customerInfoDoList);
         }else{

@@ -27,7 +27,7 @@
 <![endif]-->
 <input type="hidden" id="loginUserId" value="<sec:authentication property="principal.userId"></sec:authentication>">
 <input type="hidden" id="loginUserName" value="<sec:authentication property="principal.username"></sec:authentication>">
-<sec:authorize access="hasRole('ROLE_MANAGER')">
+<sec:authorize access="hasRole('ROLE_SALESMANAGER')">
 <input type="hidden" id="loginUserRole" value="ROLE_MANAGER">
 </sec:authorize>
 <header class="am-topbar am-topbar-inverse admin-header">
@@ -65,14 +65,20 @@
         <div class="am-offcanvas-bar admin-offcanvas-bar">
             <ul class="am-list admin-sidebar-list">
                 <li><a href="/"><span class="am-icon-home"></span><span class="admin-nav-title">首页</span></a></li>
-                <sec:authorize access="hasRole('ROLE_MANAGER')">
+                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <li><a href="/salesmanager/list"><span class="am-icon-black-tie"></span><span
+                            class="admin-nav-title">经理</span></a></li>
+                </sec:authorize>
+                <sec:authorize access="hasRole('ROLE_SALESMANAGER')">
                     <li><a href="/salesman/list"><span class="am-icon-user-secret"></span><span
                             class="admin-nav-title">业务员</span></a></li>
                 </sec:authorize>
+                <sec:authorize access="hasAnyRole('ROLE_MANAGER', 'ROLE_SALESMANAGER')">
                 <li><a href="/customer/list"><span class="am-icon-users"></span><span class="admin-nav-title">客户管理</span></a>
                 </li>
                 <li><a href="/customerTraceLog/list"><span class="am-icon-book"></span><span class="admin-nav-title">客户笔记</span></a>
                 </li>
+                </sec:authorize>
             </ul>
         </div>
     </div>

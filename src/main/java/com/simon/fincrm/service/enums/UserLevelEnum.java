@@ -12,7 +12,9 @@ public enum UserLevelEnum {
 
     ROLE_SALESMAN(1, "销售人员"),
 
-    ROLE_MANAGER(9,"经理");
+    ROLE_SALESMANAGER(9,"经理"),
+
+    RULE_ADMIN(10,"管理员");
 
     /** 等级id*/
     private int leveId;

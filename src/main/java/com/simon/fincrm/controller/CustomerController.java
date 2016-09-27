@@ -56,7 +56,7 @@ public class CustomerController {
         } else {
 
             if(StringUtils.isEmpty(name)) {
-                if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_MANAGER.name())) {
+                if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMANAGER.name())) {
                     result = customerInfo.getByManagerId(loginLoginUserInfo.getUserId());
                 }else{
                     result = customerInfo.getBySalesmanId(loginLoginUserInfo.getUserId());
@@ -66,7 +66,7 @@ public class CustomerController {
                 request.setId(loginLoginUserInfo.getUserId());
                 request.setName(name);
 
-                if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_MANAGER.name())) {
+                if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMANAGER.name())) {
                     result = customerInfo.getByManagerIdAndCustomerName(request);
                 }else{
                     result = customerInfo.getBySalesmanIdAndCustomerName(request);

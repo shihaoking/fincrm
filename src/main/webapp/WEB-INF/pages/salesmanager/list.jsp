@@ -2,21 +2,21 @@
 
 <div class="am-cf am-padding-left">
     <div class="am-fl am-cf">
-        <span class="am-icon-user-secret am-text-primary"></span>
-        <strong class="am-text-primary am-text-lg">业务员管理</strong>
+        <span class="am-icon-black-tie am-text-primary"></span>
+        <strong class="am-text-primary am-text-lg">经理管理</strong>
     </div>
 </div>
 <div class="am-g am-margin-top">
     <div class="am-u-sm-12 am-u-md-6">
         <div class="am-btn-toolbar">
             <div class="am-btn-group am-btn-group-xs">
-                <button type="button" class="am-btn am-btn-default" id="add-salesman"><span class="am-icon-plus"></span> 新增</button>
+                <button type="button" class="am-btn am-btn-default" id="add-salesmanager"><span class="am-icon-plus"></span> 新增</button>
             </div>
         </div>
     </div>
     <div class="am-u-sm-12 am-u-md-3">
         <div class="am-input-group am-input-group-sm">
-            <input type="text" class="am-form-field" id="search-text" value="${param.get("name")}" placeholder="输入销售员姓名">
+            <input type="text" class="am-form-field" id="search-text" value="${param.get("name")}" placeholder="输入经理姓名">
             <span class="am-input-group-btn">
             <button class="am-btn am-btn-default" type="button" id="search-btn">搜索</button>
           </span>
@@ -25,28 +25,24 @@
 </div>
 <div class="am-g">
     <div class="am-u-sm-12">
-        <table class="am-table am-table-striped am-table-hover table-main" id="salesman-info-table">
+        <table class="am-table am-table-striped am-table-hover table-main" id="salesmanager-info-table">
             <thead>
             <tr>
                 <th class="table-check"><input type="checkbox"/></th>
                 <th class="table-id">ID</th>
                 <th class="table-title">姓名</th>
-                <th class="table-type">客户数</th>
                 <th class="table-phome">电话</th>
                 <th class="table-email">邮箱</th>
                 <th class="table-set">操作</th>
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="userInfo" items="${salesmanList}" begin="0">
+            <c:forEach var="userInfo" items="${managerList}" begin="0">
                 <tr>
                     <td><input type="checkbox"/></td>
                     <td><c:out value="${userInfo.id}"></c:out></td>
                     <td><a href="/customer/list?id=<c:out value="${userInfo.id}"></c:out>"><c:out
                             value="${userInfo.userName}"></c:out></a></td>
-                    <td class="customer_count" id="customer_count_<c:out value="${userInfo.id}"></c:out>"
-                        item-id="<c:out value="${userInfo.id}"></c:out>">--
-                    </td>
                     <td><c:out value="${userInfo.phonenumber}"></c:out></td>
                     <td><c:out value="${userInfo.email}"></c:out></td>
                     <td>
@@ -57,8 +53,8 @@
                                         class="am-icon-pencil-square-o"></span> 编辑
                                 </button>
                                 <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><a class="am-link-black"
-                                                                                                   href="/customer/list?id=<c:out value="${userInfo.id}"></c:out>"><span
-                                        class="am-icon-users"></span> 客户</a>
+                                                                                                   href="/salesman/list?id=<c:out value="${userInfo.id}"></c:out>"><span
+                                        class="am-icon-user-secret"></span> 业务员</a>
                                 </button>
                                 <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only am-btn-delete"
                                         item-id="<c:out value="${userInfo.id}"></c:out>"><span
@@ -92,5 +88,5 @@
         </div>
     </div>
 </div>
-<script src="../../statics/js/salesman/list.js"></script>
+<script src="../../statics/js/salesmanager/list.js"></script>
 <%@include file="../component/footer.jsp" %>

@@ -28,6 +28,8 @@ public interface IUserInfo {
 
     List<UserInfoDo> selectByManageIdAndSalesmanName(SearchWithIdAndNameRequest request);
 
+    List<UserInfoDo> selectByLevelIdAndName(SearchWithIdAndNameRequest request);
+
     int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.UserInfoDo record);
 
     int updateByPrimaryKey(com.simon.fincrm.dal.model.UserInfoDo record);
