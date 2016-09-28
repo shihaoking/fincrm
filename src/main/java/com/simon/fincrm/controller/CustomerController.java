@@ -8,6 +8,7 @@ import com.simon.fincrm.service.enums.UserLevelEnum;
 import com.simon.fincrm.service.facade.ICustomerInfo;
 import com.simon.fincrm.service.facade.ISalesmanCustomerRelation;
 import com.simon.fincrm.service.facade.IUserInfo;
+import com.simon.fincrm.service.facade.IUserLevel;
 import com.simon.fincrm.service.interceptor.PageInterceptor;
 import com.simon.fincrm.service.result.CommonResult;
 import com.simon.fincrm.service.result.CustomerInfoWithSalesmanResult;
@@ -36,6 +37,9 @@ public class CustomerController {
 
     @Autowired
     private IUserInfo userInfo;
+
+    @Autowired
+    private IUserLevel userLevel;
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String getList(ModelMap modelMap, @RequestParam(name = "id", required = false, defaultValue = "-1") int id, @RequestParam(name = "name", required = false) String name, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
@@ -110,7 +114,13 @@ public class CustomerController {
     @RequestMapping(value = "getBySalesmanId", method = RequestMethod.GET)
     @ResponseBody
     public List<CustomerInfoDo> getBySalesmanId(@RequestParam("id") int id) {
-        return customerInfo.getBySalesmanId(id);
+        UserLevelDo userLevelDo = userLevel.selectByUserId(id);
+
+        if (userLevelDo.getLevelId().equals(UserLevelEnum.ROLE_SALESMANAGER.getLeveId())){
+            return customerInfo.getByManagerId(id);
+        }else {
+            return customerInfo.getBySalesmanId(id);
+        }
     }
 
     @RequestMapping(value = "update", method = RequestMethod.POST)

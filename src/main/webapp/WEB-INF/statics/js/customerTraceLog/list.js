@@ -35,7 +35,7 @@ $(function () {
 
     //填充编辑表单客户下拉框数据
     var fillCustomerInfoToSelect = function (target) {
-        $.getJSON('/customer/getBySalesmanId', {id: 2}, function (result) {
+        $.getJSON('/customer/getBySalesmanId', {id: $('#loginUserId').val()}, function (result) {
             $.each(result, function (index, val) {
                 target.append('<option value="' + val.id + '">' + val.customerName + '</option>');
             });
