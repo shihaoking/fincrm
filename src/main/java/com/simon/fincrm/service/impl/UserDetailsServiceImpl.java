@@ -9,7 +9,9 @@ import com.simon.fincrm.dal.model.UserLevelDo;
 import com.simon.fincrm.service.entities.LoginUserInfo;
 import com.simon.fincrm.service.facade.IUserInfo;
 import com.simon.fincrm.service.facade.IUserLevel;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +30,8 @@ import java.util.Set;
 @Transactional(readOnly = true)
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
+    Logger logger = Logger.getLogger("common");
+
     @Autowired
     private IUserInfo userInfo;
 
@@ -35,24 +39,30 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private IUserLevel userLevel;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        logger.info("valid name:" + username);
+        try {
+            UserInfoDo user = userInfo.selectByName(username);
+            logger.info("user info: id:" + user.getId() + "_name:" + user.getUserName());
+            if (user == null) {
+                throw new UsernameNotFoundException("用户" + username + "不存在!");
+            }
 
-        UserInfoDo user = userInfo.selectByName(username);
+            Set<GrantedAuthority> grantedAuths = obtainGrantedAuthorities(user);
 
-        if (user == null) {
-            throw new UsernameNotFoundException("用户" + username + "不存在!");
+            boolean accountNonExpired = true;
+            boolean credentialsNonExpired = true;
+            boolean accountNonLocked = true;
+
+            UserDetails userDetails = new LoginUserInfo(user.getId(),
+                    user.getUserName(), user.getUserPwd(), user.getStatus(), accountNonExpired, accountNonLocked,
+                    credentialsNonExpired, grantedAuths);
+
+            return userDetails;
+        }catch (Exception ex){
+            logger.error("loadUserByUsername", ex);
         }
 
-        Set<GrantedAuthority> grantedAuths = obtainGrantedAuthorities(user);
-
-        boolean accountNonExpired = true;
-        boolean credentialsNonExpired = true;
-        boolean accountNonLocked = true;
-
-        UserDetails userDetails = new LoginUserInfo( user.getId(),
-                user.getUserName(), user.getUserPwd(), user.getStatus(), accountNonExpired,accountNonLocked,
-                credentialsNonExpired,  grantedAuths);
-
-        return userDetails;
+        return null;
     }
 
     /**

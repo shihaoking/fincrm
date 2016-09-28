@@ -5,6 +5,7 @@
 package com.simon.fincrm.service;
 
 import com.simon.fincrm.service.entities.LoginUserInfo;
+import org.apache.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
