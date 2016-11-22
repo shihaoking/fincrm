@@ -1,10 +1,9 @@
 package com.simon.fincrm.service.facade;
 
-import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
-import com.simon.fincrm.dal.model.UserInfoDo;
-import com.simon.fincrm.service.result.SalesmanInfoWithManagerResult;
-
-import java.util.List;
+import com.simon.fincrmprod.service.facade.model.UserInfoModel;
+import com.simon.fincrmprod.service.facade.request.CommonInfoQueryRequest;
+import com.simon.fincrmprod.service.facade.result.SalesmanInfoWithManagerResult;
+import com.simon.fincrmprod.service.facade.result.UserInfoQueryResult;
 
 /**
  * Created by jinshihao on 16/8/24.
@@ -12,27 +11,27 @@ import java.util.List;
 public interface IUserInfo {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(com.simon.fincrm.dal.model.UserInfoDo record);
+    int insert(UserInfoModel record);
 
-    int insertSelective(com.simon.fincrm.dal.model.UserInfoDo record);
+    int insertSelective(UserInfoModel record);
 
-    UserInfoDo selectByPrimaryKey(Integer id);
+    UserInfoModel selectByPrimaryKey(Integer id);
 
-    UserInfoDo selectByName(String name);
+    UserInfoModel selectByName(String name);
 
-    List<UserInfoDo> selectAll(Boolean status);
+    UserInfoQueryResult selectAll(CommonInfoQueryRequest request);
 
-    List<UserInfoDo> selectByManageId(Integer managerId);
+    UserInfoQueryResult selectByManageId(CommonInfoQueryRequest request);
 
-    List<UserInfoDo> selectByLevelId(Integer levelId);
+    UserInfoQueryResult selectByLevelId(CommonInfoQueryRequest request);
 
-    List<UserInfoDo> selectByManageIdAndSalesmanName(SearchWithIdAndNameRequest request);
+    UserInfoQueryResult selectByManageIdAndSalesmanName(CommonInfoQueryRequest request);
 
-    List<UserInfoDo> selectByLevelIdAndName(SearchWithIdAndNameRequest request);
+    UserInfoQueryResult selectByLevelIdAndName(CommonInfoQueryRequest request);
 
-    int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.UserInfoDo record);
+    int updateByPrimaryKeySelective(UserInfoModel record);
 
-    int updateByPrimaryKey(com.simon.fincrm.dal.model.UserInfoDo record);
+    int updateByPrimaryKey(UserInfoModel record);
 
     SalesmanInfoWithManagerResult getSalesmanInfoWithManager(Integer salesmanId);
 }

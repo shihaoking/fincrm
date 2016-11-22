@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://cxf.apache.org/jaxws
+       http://cxf.apache.org/schemas/jaxws.xsd">
 
+    <context:property-placeholder location="classpath:service.properties"></context:property-placeholder>
     <context:component-scan base-package="com.simon.fincrm.service"></context:component-scan>
+
+    <jaxws:client id="customerInfo"
+                  serviceClass="com.simon.fincrmprod.service.facade.api.CustomerInfoFacade"
+                  address="${service_url}/customerInfo"/>
+    <jaxws:client id="customerTraceLog"
+                  serviceClass="com.simon.fincrmprod.service.facade.api.CustomerTraceLogFacade"
+                  address="${service_url}/customerTraceLog"/>
+    <jaxws:client id="salesmanCustomerRelation"
+                  serviceClass="com.simon.fincrmprod.service.facade.api.SalesmanCustomerRelationFacade"
+                  address="${service_url}/salesmanCustomerRelation"/>
+    <jaxws:client id="salesmanManagerReation"
+                  serviceClass="com.simon.fincrmprod.service.facade.api.SalesmanManagerReationFacade"
+                  address="${service_url}/customerInfo"/>
+    <jaxws:client id="userInfo"
+                  serviceClass="com.simon.fincrmprod.service.facade.api.UserInfoFacade"
+                  address="${service_url}/userInfo"/>
+    <jaxws:client id="userLevel"
+                  serviceClass="com.simon.fincrmprod.service.facade.api.UserLevelFacade"
+                  address="${service_url}/userLevel"/>
 </beans>

@@ -5,26 +5,21 @@
 package com.simon.fincrm.controller;
 
 import com.alibaba.druid.util.StringUtils;
-import com.simon.fincrm.dal.model.CustomerInfoDo;
-import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
-import com.simon.fincrm.dal.model.UserInfoDo;
-import com.simon.fincrm.dal.model.UserLevelDo;
-import com.simon.fincrm.service.UserSecurityUtils;
-import com.simon.fincrm.service.entities.LoginUserInfo;
-import com.simon.fincrm.service.enums.UserLevelEnum;
-import com.simon.fincrm.service.facade.ISalesmanManagerReation;
 import com.simon.fincrm.service.facade.IUserInfo;
 import com.simon.fincrm.service.facade.IUserLevel;
-import com.simon.fincrm.service.interceptor.PageInterceptor;
-import com.simon.fincrm.service.result.CommonResult;
-import com.simon.fincrm.service.result.SalesmanInfoWithManagerResult;
+import com.simon.fincrmprod.service.facade.enums.UserLevelEnum;
+import com.simon.fincrmprod.service.facade.model.UserInfoModel;
+import com.simon.fincrmprod.service.facade.model.UserLevelModel;
+import com.simon.fincrmprod.service.facade.request.CommonInfoQueryRequest;
+import com.simon.fincrmprod.service.facade.result.CommonResult;
+import com.simon.fincrmprod.service.facade.result.SalesmanInfoWithManagerResult;
+import com.simon.fincrmprod.service.facade.result.UserInfoQueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author jinshihao
@@ -43,29 +38,31 @@ public class SalesManagerController extends UserInfoBaseController {
     @RequestMapping("/list")
     public String getList(ModelMap modelMap, @RequestParam(name = "name", required =  false) String searchName, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
 
-        PageInterceptor.startPage(pageNum, 20);
+        UserInfoQueryResult result;
 
-        List<UserInfoDo> result;
+        CommonInfoQueryRequest request = new CommonInfoQueryRequest();
+        request.setPageNum(pageNum);
+        request.setPageSize(20);
+
         if(StringUtils.isEmpty(searchName)) {
-            result = userInfo.selectByLevelId(UserLevelEnum.ROLE_SALESMANAGER.getLeveId());
+            request.setId(UserLevelEnum.ROLE_SALESMANAGER.getLeveId());
+            result = userInfo.selectByLevelId(request);
         }else{
-            SearchWithIdAndNameRequest request = new SearchWithIdAndNameRequest();
             request.setId(UserLevelEnum.ROLE_SALESMANAGER.getLeveId());
             request.setName(searchName);
             result = userInfo.selectByLevelIdAndName(request);
         }
 
-        PageInterceptor.Page page = PageInterceptor.endPage();
-        modelMap.addAttribute("pageInfo", page);
+        modelMap.addAttribute("pageInfo", result.getPageInfo());
 
-        modelMap.addAttribute("managerList", result);
+        modelMap.addAttribute("managerList", result.getUserInfoModelList());
         return "salesmanager/list";
     }
 
     @RequestMapping(value = "/getSalesManagerInfo", method = RequestMethod.GET)
     @ResponseBody
-    public UserInfoDo getSalesmanInfo(int id) {
-        UserInfoDo result = userInfo.selectByPrimaryKey(id);
+    public UserInfoModel getSalesmanInfo(int id) {
+        UserInfoModel result = userInfo.selectByPrimaryKey(id);
         return result;
     }
 
@@ -75,7 +72,7 @@ public class SalesManagerController extends UserInfoBaseController {
         CommonResult commonResult = new CommonResult();
 
         try {
-            UserInfoDo userInfoDo = new UserInfoDo();
+            UserInfoModel userInfoDo = new UserInfoModel();
             userInfoDo.setId(info.getSalesmanId());
             userInfoDo.setUserName(info.getUserName());
             userInfoDo.setPhonenumber(info.getPhonenumber());
@@ -104,7 +101,7 @@ public class SalesManagerController extends UserInfoBaseController {
         CommonResult commonResult = new CommonResult();
 
         try {
-            UserInfoDo userInfoDo = new UserInfoDo();
+            UserInfoModel userInfoDo = new UserInfoModel();
             userInfoDo.setUserName(info.getUserName());
             userInfoDo.setPhonenumber(info.getPhonenumber());
             userInfoDo.setEmail(info.getEmail());
@@ -116,7 +113,7 @@ public class SalesManagerController extends UserInfoBaseController {
             userInfoDo.setCreateTime(new Date());
             userInfo.insertSelective(userInfoDo);
 
-            UserLevelDo userLevelDo = new UserLevelDo();
+            UserLevelModel userLevelDo = new UserLevelModel();
             userLevelDo.setLevelId(UserLevelEnum.ROLE_SALESMANAGER.getLeveId());
             userLevelDo.setUserId(userInfoDo.getId());
             userLevel.insert(userLevelDo);

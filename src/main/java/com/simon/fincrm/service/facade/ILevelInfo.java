@@ -1,18 +1,20 @@
 package com.simon.fincrm.service.facade;
 
+import com.simon.fincrmprod.service.facade.model.LevelInfoModel;
+
 /**
  * Created by jinshihao on 16/8/24.
  */
 public interface ILevelInfo {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(com.simon.fincrm.dal.model.LevelInfoDo record);
+    int insert(LevelInfoModel record);
 
-    int insertSelective(com.simon.fincrm.dal.model.LevelInfoDo record);
+    int insertSelective(LevelInfoModel record);
 
-    com.simon.fincrm.dal.model.LevelInfoDo selectByPrimaryKey(Integer id);
+    LevelInfoModel selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.LevelInfoDo record);
+    int updateByPrimaryKeySelective(LevelInfoModel record);
 
-    int updateByPrimaryKey(com.simon.fincrm.dal.model.LevelInfoDo record);
+    int updateByPrimaryKey(LevelInfoModel record);
 }

@@ -1,13 +1,10 @@
 package com.simon.fincrm.service.facade;
 
-import com.simon.fincrm.dal.dao.CustomerInfoDao;
-import com.simon.fincrm.dal.model.CustomerInfoDo;
-import com.simon.fincrm.dal.model.CustomerTraceLogDo;
-import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
-import com.simon.fincrm.service.result.CustomerInfoWithSalesmanResult;
-import com.sun.jdi.IntegerType;
 
-import java.util.List;
+import com.simon.fincrmprod.service.facade.model.CustomerInfoModel;
+import com.simon.fincrmprod.service.facade.request.CommonInfoQueryRequest;
+import com.simon.fincrmprod.service.facade.result.CustomerInfoQueryResult;
+import com.simon.fincrmprod.service.facade.result.CustomerInfoWithSalesmanResult;
 
 /**
  * Created by jinshihao on 16/8/24.
@@ -15,26 +12,26 @@ import java.util.List;
 public interface ICustomerInfo {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(com.simon.fincrm.dal.model.CustomerInfoDo record);
+    int insert(CustomerInfoModel record);
 
-    int insertSelective(com.simon.fincrm.dal.model.CustomerInfoDo record);
+    int insertSelective(CustomerInfoModel record);
 
-    com.simon.fincrm.dal.model.CustomerInfoDo selectByPrimaryKey(Integer id);
+    CustomerInfoModel selectByPrimaryKey(Integer id);
 
-    List<CustomerInfoDo> getBySalesmanId(Integer customerId);
+    CustomerInfoQueryResult getBySalesmanId(CommonInfoQueryRequest request);
 
-    List<CustomerInfoDo> getBySalesmanIdAndCustomerName(SearchWithIdAndNameRequest request);
+    CustomerInfoQueryResult getBySalesmanIdAndCustomerName(CommonInfoQueryRequest request);
 
-    List<CustomerInfoDo> getByManagerIdAndCustomerName(SearchWithIdAndNameRequest request);
+    CustomerInfoQueryResult getByManagerIdAndCustomerName(CommonInfoQueryRequest request);
 
 
-    List<CustomerInfoDo> getByManagerId(Integer id);
+    CustomerInfoQueryResult getByManagerId(CommonInfoQueryRequest request);
 
-    List<CustomerInfoDo> selectAll(Boolean status);
+    CustomerInfoQueryResult selectAll(CommonInfoQueryRequest request);
 
-    int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.CustomerInfoDo record);
+    int updateByPrimaryKeySelective(CustomerInfoModel record);
 
-    int updateByPrimaryKey(com.simon.fincrm.dal.model.CustomerInfoDo record);
+    int updateByPrimaryKey(CustomerInfoModel record);
 
     CustomerInfoWithSalesmanResult getCustomerInfoWithSalesman(Integer customerId);
 }

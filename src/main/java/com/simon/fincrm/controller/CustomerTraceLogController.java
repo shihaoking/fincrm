@@ -4,21 +4,23 @@
  */
 package com.simon.fincrm.controller;
 
-import com.simon.fincrm.dal.model.CustomerInfoDo;
-import com.simon.fincrm.dal.model.CustomerTraceLogDo;
 import com.simon.fincrm.service.UserSecurityUtils;
-import com.simon.fincrm.service.enums.UserLevelEnum;
 import com.simon.fincrm.service.facade.ICustomerInfo;
 import com.simon.fincrm.service.facade.ICustomerTraceLog;
-import com.simon.fincrm.service.interceptor.PageInterceptor;
-import com.simon.fincrm.service.result.CommonResult;
+import com.simon.fincrmprod.service.facade.enums.UserLevelEnum;
+import com.simon.fincrmprod.service.facade.model.CustomerInfoModel;
+import com.simon.fincrmprod.service.facade.model.CustomerTraceLogModel;
+import com.simon.fincrmprod.service.facade.model.PageInfo;
+import com.simon.fincrmprod.service.facade.request.CommonInfoQueryRequest;
+import com.simon.fincrmprod.service.facade.result.CommonResult;
+import com.simon.fincrmprod.service.facade.result.CustomerInfoQueryResult;
+import com.simon.fincrmprod.service.facade.result.CustomerTraceLogQueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author jinshihao
@@ -36,37 +38,47 @@ public class CustomerTraceLogController {
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String getList(ModelMap modelMap, @RequestParam(name = "id", defaultValue = "-1") int id, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
 
-        PageInterceptor.startPage(pageNum, 20);
+        CustomerTraceLogQueryResult result;
 
-        List<CustomerTraceLogDo> result;
+        CommonInfoQueryRequest request = new CommonInfoQueryRequest();
+        request.setPageSize(20);
+        request.setPageNum(pageNum);
+
         if(id == -1){
+            request.setId(UserSecurityUtils.getCurrentUserId());
+
             if(UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMANAGER.name())){
-                result = customerReportLog.selectByManagerId(UserSecurityUtils.getCurrentUserId());
+                result = customerReportLog.selectByManagerId(request);
             }else {
-                result = customerReportLog.selectBySalesmanId(UserSecurityUtils.getCurrentUserId());
+                result = customerReportLog.selectBySalesmanId(request);
             }
         }else {
-            result = customerReportLog.selectByCustomerId(id);
+            request.setId(id);
+            result = customerReportLog.selectByCustomerId(request);
         }
 
 
-        PageInterceptor.Page page = PageInterceptor.endPage();
-        modelMap.addAttribute("pageInfo", page);
+        PageInfo pageInfo = result.getPageInfo();
 
-        modelMap.addAttribute("traceLogList", result);
-        modelMap.addAttribute("traceLogCount", result.size());
+        modelMap.addAttribute("pageInfo", pageInfo);
 
-        CustomerInfoDo customerInfoDo = customerInfo.selectByPrimaryKey(id);
+        modelMap.addAttribute("traceLogList", result.getCustomerTraceLogModelList());
+
+        CustomerInfoModel customerInfoDo = customerInfo.selectByPrimaryKey(id);
         modelMap.addAttribute("customerInfo", customerInfoDo);
 
+        CommonInfoQueryRequest customerListRequest = new CommonInfoQueryRequest();
+        customerListRequest.setId(UserSecurityUtils.getCurrentUserId());
+
+        CustomerInfoQueryResult customerInfoQueryResult;
+
         if(UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMANAGER.name())){
-            List<CustomerInfoDo> customerInfoDoList =  customerInfo.getByManagerId(UserSecurityUtils.getCurrentUserId());
-            modelMap.addAttribute("customerList", customerInfoDoList);
+            customerInfoQueryResult =  customerInfo.getByManagerId(customerListRequest);
         }else{
-            List<CustomerInfoDo> customerInfoDoList =  customerInfo.getBySalesmanId(UserSecurityUtils.getCurrentUserId());
-            modelMap.addAttribute("customerList", customerInfoDoList);
+            customerInfoQueryResult =  customerInfo.getBySalesmanId(customerListRequest);
         }
 
+        modelMap.addAttribute("customerList", customerInfoQueryResult.getCustomerInfoModelList());
 
         modelMap.addAttribute("requestCustomerId", id);
         return "/customerTraceLog/list";
@@ -74,13 +86,13 @@ public class CustomerTraceLogController {
 
     @RequestMapping(value = "get", method = RequestMethod.GET)
     @ResponseBody
-    public CustomerTraceLogDo get(@RequestParam("id") int id){
+    public CustomerTraceLogModel get(@RequestParam("id") int id){
         return  customerReportLog.selectByPrimaryKey(id);
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult add(@RequestBody CustomerTraceLogDo record){
+    public CommonResult add(@RequestBody CustomerTraceLogModel record){
         CommonResult commonResult = new CommonResult();
 
         record.setCreator(UserSecurityUtils.getCurrentUser().getUserId());
@@ -101,10 +113,10 @@ public class CustomerTraceLogController {
 
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult update(@RequestBody CustomerTraceLogDo record){
+    public CommonResult update(@RequestBody CustomerTraceLogModel record){
         CommonResult commonResult = new CommonResult();
 
-        CustomerTraceLogDo customerTraceLogDo = customerReportLog.selectByPrimaryKey(record.getId());
+        CustomerTraceLogModel customerTraceLogDo = customerReportLog.selectByPrimaryKey(record.getId());
         try {
             customerTraceLogDo.setReportInfo(record.getReportInfo());
             customerTraceLogDo.setStatus(record.getStatus());
@@ -128,7 +140,7 @@ public class CustomerTraceLogController {
         CommonResult commonResult = new CommonResult();
 
         try{
-            CustomerTraceLogDo record = customerReportLog.selectByPrimaryKey(id);
+            CustomerTraceLogModel record = customerReportLog.selectByPrimaryKey(id);
             record.setStatus(false);
 
             customerReportLog.updateByPrimaryKeySelective(record);

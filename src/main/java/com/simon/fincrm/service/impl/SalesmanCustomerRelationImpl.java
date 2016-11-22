@@ -1,9 +1,10 @@
 package com.simon.fincrm.service.impl;
 
-import com.simon.fincrm.dal.dao.SalesmanCustomerRelationDao;
-import com.simon.fincrm.dal.model.SalesmanCustomerCountDo;
-import com.simon.fincrm.dal.model.SalesmanCustomerRelationDo;
+
 import com.simon.fincrm.service.facade.ISalesmanCustomerRelation;
+import com.simon.fincrmprod.service.facade.api.SalesmanCustomerRelationFacade;
+import com.simon.fincrmprod.service.facade.model.SalesmanCustomerCountModel;
+import com.simon.fincrmprod.service.facade.model.SalesmanCustomerRelationModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,38 +16,33 @@ import java.util.List;
 @Service
 public class SalesmanCustomerRelationImpl implements ISalesmanCustomerRelation {
     @Autowired
-    private SalesmanCustomerRelationDao salesmanCustomerReationDao;
+    private SalesmanCustomerRelationFacade salesmanCustomerRelationFacade;
 
     public int deleteByPrimaryKey(Integer id) {
-        return salesmanCustomerReationDao.deleteByPrimaryKey(id);
+        return salesmanCustomerRelationFacade.deleteByPrimaryKey(id);
     }
 
-    public int insert(SalesmanCustomerRelationDo record) {
-        return salesmanCustomerReationDao.insert(record);
+    public int insert(SalesmanCustomerRelationModel record) {
+        return salesmanCustomerRelationFacade.insert(record);
     }
 
-    public int insertSelective(SalesmanCustomerRelationDo record) {
-        return salesmanCustomerReationDao.insertSelective(record);
+    public int insertSelective(SalesmanCustomerRelationModel record) {
+        return salesmanCustomerRelationFacade.insertSelective(record);
     }
 
-    public SalesmanCustomerRelationDo selectByCustomerId(Integer customerId) {
-        return salesmanCustomerReationDao.selectByCustomerId(customerId);
+    public SalesmanCustomerRelationModel selectByCustomerId(Integer customerId) {
+        return salesmanCustomerRelationFacade.selectByCustomerId(customerId);
     }
 
-    public int updateByPrimaryKeySelective(SalesmanCustomerRelationDo record) {
-        return salesmanCustomerReationDao.updateByPrimaryKeySelective(record);
+    public int updateByPrimaryKeySelective(SalesmanCustomerRelationModel record) {
+        return salesmanCustomerRelationFacade.updateByPrimaryKeySelective(record);
     }
 
-    public int updateByPrimaryKey(SalesmanCustomerRelationDo record) {
-        return salesmanCustomerReationDao.updateByPrimaryKey(record);
+    public int updateByPrimaryKey(SalesmanCustomerRelationModel record) {
+        return salesmanCustomerRelationFacade.updateByPrimaryKey(record);
     }
 
-    public List<SalesmanCustomerCountDo> selectCustomerCountBySalesmanIds(String ids) {
-        if(ids == null || ids.equals("")){
-            return  null;
-        }
-
-        String[] idArray = ids.split(",");
-        return salesmanCustomerReationDao.selectCustomerCountBySalesmanIds(idArray);
+    public List<SalesmanCustomerCountModel> selectCustomerCountBySalesmanIds(String ids) {
+        return salesmanCustomerRelationFacade.selectCustomerCountBySalesmanIds(ids);
     }
 }

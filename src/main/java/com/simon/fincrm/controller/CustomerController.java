@@ -1,24 +1,25 @@
 package com.simon.fincrm.controller;
 
 import com.alibaba.druid.util.StringUtils;
-import com.simon.fincrm.dal.model.*;
 import com.simon.fincrm.service.UserSecurityUtils;
 import com.simon.fincrm.service.entities.LoginUserInfo;
-import com.simon.fincrm.service.enums.UserLevelEnum;
 import com.simon.fincrm.service.facade.ICustomerInfo;
 import com.simon.fincrm.service.facade.ISalesmanCustomerRelation;
 import com.simon.fincrm.service.facade.IUserInfo;
 import com.simon.fincrm.service.facade.IUserLevel;
-import com.simon.fincrm.service.interceptor.PageInterceptor;
-import com.simon.fincrm.service.result.CommonResult;
-import com.simon.fincrm.service.result.CustomerInfoWithSalesmanResult;
+import com.simon.fincrmprod.service.facade.enums.UserLevelEnum;
+import com.simon.fincrmprod.service.facade.model.*;
+import com.simon.fincrmprod.service.facade.request.CommonInfoQueryRequest;
+import com.simon.fincrmprod.service.facade.result.CommonResult;
+import com.simon.fincrmprod.service.facade.result.CustomerInfoQueryResult;
+import com.simon.fincrmprod.service.facade.result.CustomerInfoWithSalesmanResult;
+import com.simon.fincrmprod.service.facade.result.UserInfoQueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,17 +43,20 @@ public class CustomerController {
     private IUserLevel userLevel;
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public String getList(ModelMap modelMap, @RequestParam(name = "id", required = false, defaultValue = "-1") int id, @RequestParam(name = "name", required = false) String name, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
-        List<CustomerInfoDo> result = new ArrayList<CustomerInfoDo>();
+    public String getList(ModelMap modelMap, @RequestParam(name = "id", required = false, defaultValue = "-1") int id, @RequestParam(name = "name", required = false) String name, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) throws IOException {
+        CustomerInfoQueryResult result;
         LoginUserInfo loginLoginUserInfo = UserSecurityUtils.getCurrentUser();
-        PageInterceptor.startPage(pageNum, 20);
+
+        CommonInfoQueryRequest request = new CommonInfoQueryRequest();
+        request.setPageNum(pageNum);
+        request.setPageSize(20);
 
         if (id != -1) {
+            request.setId(id);
+
             if(StringUtils.isEmpty(name)) {
-                result = customerInfo.getBySalesmanId(id);
+                result = customerInfo.getBySalesmanId(request);
             }else {
-                SearchWithIdAndNameRequest request = new SearchWithIdAndNameRequest();
-                request.setId(id);
                 request.setName(name);
                 result = customerInfo.getBySalesmanIdAndCustomerName(request);
             }
@@ -61,12 +65,13 @@ public class CustomerController {
 
             if(StringUtils.isEmpty(name)) {
                 if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMANAGER.name())) {
-                    result = customerInfo.getByManagerId(loginLoginUserInfo.getUserId());
+                    request.setId(loginLoginUserInfo.getUserId());
+                    result = customerInfo.getByManagerId(request);
                 }else{
-                    result = customerInfo.getBySalesmanId(loginLoginUserInfo.getUserId());
+                    request.setId(loginLoginUserInfo.getUserId());
+                    result = customerInfo.getBySalesmanId(request);
                 }
             }else{
-                SearchWithIdAndNameRequest request = new SearchWithIdAndNameRequest();
                 request.setId(loginLoginUserInfo.getUserId());
                 request.setName(name);
 
@@ -78,15 +83,19 @@ public class CustomerController {
             }
         }
 
-        PageInterceptor.Page page = PageInterceptor.endPage();
-        modelMap.addAttribute("pageInfo", page);
+        List<CustomerInfoModel> customerInfoModels = result.getCustomerInfoModelList();
+        PageInfo pageInfo = result.getPageInfo();
 
-        modelMap.addAttribute("customerList", result);
+        modelMap.addAttribute("pageInfo", pageInfo);
+        modelMap.addAttribute("customerList", customerInfoModels);
 
 
-        List<UserInfoDo> salesmanList = userInfo.selectByManageId(loginLoginUserInfo.getUserId());
+        CommonInfoQueryRequest salesmaQrequest = new CommonInfoQueryRequest();
+        salesmaQrequest.setId(loginLoginUserInfo.getUserId());
 
-        modelMap.addAttribute("salesmanList", salesmanList);
+        UserInfoQueryResult salesmanList = userInfo.selectByManageId(salesmaQrequest);
+
+        modelMap.addAttribute("salesmanList", salesmanList.getUserInfoModelList());
         modelMap.addAttribute("requestSalesmanId", id);
 
         return "customer/list";
@@ -94,10 +103,10 @@ public class CustomerController {
 
     @RequestMapping(value = "getCountBySalesmanIds", method = RequestMethod.GET)
     @ResponseBody
-    public List<SalesmanCustomerCountDo> getListByIds(@RequestParam(name = "ids") String ids) {
-        List<SalesmanCustomerCountDo> result = salesmanCustomerRelation.selectCustomerCountBySalesmanIds(ids);
+    public List<SalesmanCustomerCountModel> getListByIds(@RequestParam(name = "ids") String ids) {
+        List<SalesmanCustomerCountModel> result = salesmanCustomerRelation.selectCustomerCountBySalesmanIds(ids);
         if (result == null) {
-            return new ArrayList<SalesmanCustomerCountDo>();
+            return new ArrayList<SalesmanCustomerCountModel>();
         }
 
         return result;
@@ -113,14 +122,21 @@ public class CustomerController {
 
     @RequestMapping(value = "getBySalesmanId", method = RequestMethod.GET)
     @ResponseBody
-    public List<CustomerInfoDo> getBySalesmanId(@RequestParam("id") int id) {
-        UserLevelDo userLevelDo = userLevel.selectByUserId(id);
+    public List<CustomerInfoModel> getBySalesmanId(@RequestParam("id") int id) {
+        UserLevelModel userLevelDo = userLevel.selectByUserId(id);
 
+
+        CommonInfoQueryRequest request = new CommonInfoQueryRequest();
+        request.setId(id);
+
+        CustomerInfoQueryResult result;
         if (userLevelDo.getLevelId().equals(UserLevelEnum.ROLE_SALESMANAGER.getLeveId())){
-            return customerInfo.getByManagerId(id);
+            result = customerInfo.getByManagerId(request);
         }else {
-            return customerInfo.getBySalesmanId(id);
+            result = customerInfo.getBySalesmanId(request);
         }
+
+        return result.getCustomerInfoModelList();
     }
 
     @RequestMapping(value = "update", method = RequestMethod.POST)
@@ -129,17 +145,17 @@ public class CustomerController {
         CommonResult commonResult = new CommonResult();
 
         try {
-            CustomerInfoDo customerInfoDo = customerInfo.selectByPrimaryKey(info.getCustomerId());
-            customerInfoDo.setId(info.getCustomerId());
-            customerInfoDo.setCustomerName(info.getCustomerName());
-            customerInfoDo.setPhoneNumber(info.getPhoneNumber());
-            customerInfoDo.setEmail(info.getEmail());
-            customerInfoDo.setStatus(info.getStatus());
-            customerInfo.updateByPrimaryKeySelective(customerInfoDo);
+            CustomerInfoModel CustomerInfoModel = customerInfo.selectByPrimaryKey(info.getCustomerId());
+            CustomerInfoModel.setId(info.getCustomerId());
+            CustomerInfoModel.setCustomerName(info.getCustomerName());
+            CustomerInfoModel.setPhoneNumber(info.getPhoneNumber());
+            CustomerInfoModel.setEmail(info.getEmail());
+            CustomerInfoModel.setStatus(info.getStatus());
+            customerInfo.updateByPrimaryKeySelective(CustomerInfoModel);
 
-            SalesmanCustomerRelationDo salesmanCustomerRelationDo = salesmanCustomerRelation.selectByCustomerId(info.getCustomerId());
-            salesmanCustomerRelationDo.setSalesmanId(info.getSalesmanId());
-            salesmanCustomerRelation.updateByPrimaryKeySelective(salesmanCustomerRelationDo);
+            SalesmanCustomerRelationModel salesmanCustomerRelationModel = salesmanCustomerRelation.selectByCustomerId(info.getCustomerId());
+            salesmanCustomerRelationModel.setSalesmanId(info.getSalesmanId());
+            salesmanCustomerRelation.updateByPrimaryKeySelective(salesmanCustomerRelationModel);
         } catch (Exception ex) {
             commonResult.setSuccess(false);
             commonResult.setErrorMsg(ex.getMessage());
@@ -156,19 +172,19 @@ public class CustomerController {
         CommonResult commonResult = new CommonResult();
 
         try {
-            CustomerInfoDo customerInfoDo = new CustomerInfoDo();
-            customerInfoDo.setCustomerName(info.getCustomerName());
-            customerInfoDo.setPhoneNumber(info.getPhoneNumber());
-            customerInfoDo.setEmail(info.getEmail());
-            customerInfoDo.setStatus(info.getStatus());
-            customerInfoDo.setCreateTime(new Date());
-            customerInfoDo.setCreator(UserSecurityUtils.getCurrentUserId());
-            customerInfo.insert(customerInfoDo);
+            CustomerInfoModel CustomerInfoModel = new CustomerInfoModel();
+            CustomerInfoModel.setCustomerName(info.getCustomerName());
+            CustomerInfoModel.setPhoneNumber(info.getPhoneNumber());
+            CustomerInfoModel.setEmail(info.getEmail());
+            CustomerInfoModel.setStatus(info.getStatus());
+            CustomerInfoModel.setCreateTime(new Date());
+            CustomerInfoModel.setCreator(UserSecurityUtils.getCurrentUserId());
+            customerInfo.insert(CustomerInfoModel);
 
-            SalesmanCustomerRelationDo salesmanCustomerRelationDo = new SalesmanCustomerRelationDo();
-            salesmanCustomerRelationDo.setSalesmanId(info.getSalesmanId());
-            salesmanCustomerRelationDo.setCustomerId(customerInfoDo.getId());
-            salesmanCustomerRelation.insert(salesmanCustomerRelationDo);
+            SalesmanCustomerRelationModel salesmanCustomerRelationModel = new SalesmanCustomerRelationModel();
+            salesmanCustomerRelationModel.setSalesmanId(info.getSalesmanId());
+            salesmanCustomerRelationModel.setCustomerId(CustomerInfoModel.getId());
+            salesmanCustomerRelation.insert(salesmanCustomerRelationModel);
 
         } catch (Exception ex) {
             commonResult.setSuccess(false);
@@ -186,10 +202,10 @@ public class CustomerController {
         CommonResult commonResult = new CommonResult();
 
         try {
-            CustomerInfoDo customerInfoDo = customerInfo.selectByPrimaryKey(id);
-            customerInfoDo.setStatus(false);
+            CustomerInfoModel CustomerInfoModel = customerInfo.selectByPrimaryKey(id);
+            CustomerInfoModel.setStatus(false);
 
-            customerInfo.updateByPrimaryKeySelective(customerInfoDo);
+            customerInfo.updateByPrimaryKeySelective(CustomerInfoModel);
 
         } catch (Exception ex) {
             commonResult.setSuccess(false);

@@ -4,9 +4,9 @@
  */
 package com.simon.fincrm.service.impl;
 
-import com.simon.fincrm.dal.dao.SalesmanManagerReationDao;
-import com.simon.fincrm.dal.model.SalesmanManagerReationDo;
 import com.simon.fincrm.service.facade.ISalesmanManagerReation;
+import com.simon.fincrmprod.service.facade.api.SalesmanManagerReationFacade;
+import com.simon.fincrmprod.service.facade.model.SalesmanManagerRelationModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,33 +18,33 @@ import org.springframework.stereotype.Service;
 public class SalesmanManagerRelationImpl implements ISalesmanManagerReation {
 
     @Autowired
-    private SalesmanManagerReationDao salesmanManagerReationDao;
+    private SalesmanManagerReationFacade salesmanManagerReationFacade;
 
     public int deleteByPrimaryKey(Integer id) {
-        return salesmanManagerReationDao.deleteByPrimaryKey(id);
+        return salesmanManagerReationFacade.deleteByPrimaryKey(id);
     }
 
-    public int insert(SalesmanManagerReationDo record) {
-        return salesmanManagerReationDao.insert(record);
+    public int insert(SalesmanManagerRelationModel record) {
+        return salesmanManagerReationFacade.insert(record);
     }
 
-    public int insertSelective(SalesmanManagerReationDo record) {
-        return salesmanManagerReationDao.insertSelective(record);
+    public int insertSelective(SalesmanManagerRelationModel record) {
+        return salesmanManagerReationFacade.insertSelective(record);
     }
 
-    public SalesmanManagerReationDo selectByPrimaryKey(Integer id) {
-        return salesmanManagerReationDao.selectByPrimaryKey(id);
+    public SalesmanManagerRelationModel selectByPrimaryKey(Integer id) {
+        return salesmanManagerReationFacade.selectByPrimaryKey(id);
     }
 
-    public SalesmanManagerReationDo selectBySalesmanId(Integer id) {
-        return salesmanManagerReationDao.selectBySalesmanId(id);
+    public SalesmanManagerRelationModel selectBySalesmanId(Integer id) {
+        return salesmanManagerReationFacade.selectBySalesmanId(id);
     }
 
-    public int updateByPrimaryKeySelective(SalesmanManagerReationDo record) {
-        return salesmanManagerReationDao.updateByPrimaryKeySelective(record);
+    public int updateByPrimaryKeySelective(SalesmanManagerRelationModel record) {
+        return salesmanManagerReationFacade.updateByPrimaryKeySelective(record);
     }
 
-    public int updateByPrimaryKey(SalesmanManagerReationDo record) {
-        return salesmanManagerReationDao.updateByPrimaryKey(record);
+    public int updateByPrimaryKey(SalesmanManagerRelationModel record) {
+        return salesmanManagerReationFacade.updateByPrimaryKey(record);
     }
 }

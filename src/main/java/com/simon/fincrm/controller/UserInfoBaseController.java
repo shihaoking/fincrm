@@ -4,9 +4,9 @@
  */
 package com.simon.fincrm.controller;
 
-import com.simon.fincrm.dal.model.UserInfoDo;
 import com.simon.fincrm.service.facade.IUserInfo;
-import com.simon.fincrm.service.result.CommonResult;
+import com.simon.fincrmprod.service.facade.model.UserInfoModel;
+import com.simon.fincrmprod.service.facade.result.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +28,7 @@ public class UserInfoBaseController {
         CommonResult commonResult = new CommonResult();
 
         try {
-            UserInfoDo userInfoDo = userInfo.selectByPrimaryKey(id);
+            UserInfoModel userInfoDo = userInfo.selectByPrimaryKey(id);
             userInfoDo.setStatus(false);
 
             userInfo.updateByPrimaryKeySelective(userInfoDo);

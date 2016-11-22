@@ -4,14 +4,14 @@
  */
 package com.simon.fincrm.service.impl;
 
-import com.simon.fincrm.dal.model.UserInfoDo;
-import com.simon.fincrm.dal.model.UserLevelDo;
+
 import com.simon.fincrm.service.entities.LoginUserInfo;
 import com.simon.fincrm.service.facade.IUserInfo;
 import com.simon.fincrm.service.facade.IUserLevel;
+import com.simon.fincrmprod.service.facade.model.UserInfoModel;
+import com.simon.fincrmprod.service.facade.model.UserLevelModel;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +30,7 @@ import java.util.Set;
 @Transactional(readOnly = true)
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
-    Logger logger = Logger.getLogger("common");
+    Logger logger = Logger.getLogger(UserDetailsServiceImpl.class);
 
     @Autowired
     private IUserInfo userInfo;
@@ -41,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("valid name:" + username);
         try {
-            UserInfoDo user = userInfo.selectByName(username);
+            UserInfoModel user = userInfo.selectByName(username);
             logger.info("user info: id:" + user.getId() + "_name:" + user.getUserName());
             if (user == null) {
                 throw new UsernameNotFoundException("用户" + username + "不存在!");
@@ -58,7 +58,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     credentialsNonExpired, grantedAuths);
 
             return userDetails;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             logger.error("loadUserByUsername", ex);
         }
 
@@ -68,9 +68,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * 获得用户所有角色的权限集合.
      */
-    private Set<GrantedAuthority> obtainGrantedAuthorities(UserInfoDo user) {
+    private Set<GrantedAuthority> obtainGrantedAuthorities(UserInfoModel user) {
         Set<GrantedAuthority> authSet = new HashSet<GrantedAuthority>();
-        UserLevelDo userLevelDo = userLevel.selectByUserId(user.getId());
+        UserLevelModel userLevelDo = userLevel.selectByUserId(user.getId());
 
         if (userLevelDo != null) {
             authSet.add(new SimpleGrantedAuthority(userLevelDo.getLevelName()));

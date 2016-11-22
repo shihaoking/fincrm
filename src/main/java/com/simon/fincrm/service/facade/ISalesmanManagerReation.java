@@ -4,7 +4,8 @@
  */
 package com.simon.fincrm.service.facade;
 
-import com.simon.fincrm.dal.model.SalesmanManagerReationDo;
+
+import com.simon.fincrmprod.service.facade.model.SalesmanManagerRelationModel;
 
 /**
  * @author jinshihao
@@ -13,15 +14,15 @@ import com.simon.fincrm.dal.model.SalesmanManagerReationDo;
 public interface ISalesmanManagerReation {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(SalesmanManagerReationDo record);
+    int insert(SalesmanManagerRelationModel record);
 
-    int insertSelective(SalesmanManagerReationDo record);
+    int insertSelective(SalesmanManagerRelationModel record);
 
-    SalesmanManagerReationDo selectByPrimaryKey(Integer id);
+    SalesmanManagerRelationModel selectByPrimaryKey(Integer id);
 
-    SalesmanManagerReationDo selectBySalesmanId(Integer id);
+    SalesmanManagerRelationModel selectBySalesmanId(Integer id);
 
-    int updateByPrimaryKeySelective(SalesmanManagerReationDo record);
+    int updateByPrimaryKeySelective(SalesmanManagerRelationModel record);
 
-    int updateByPrimaryKey(SalesmanManagerReationDo record);
+    int updateByPrimaryKey(SalesmanManagerRelationModel record);
 }

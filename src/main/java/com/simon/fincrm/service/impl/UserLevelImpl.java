@@ -4,9 +4,9 @@
  */
 package com.simon.fincrm.service.impl;
 
-import com.simon.fincrm.dal.dao.UserLevelDao;
-import com.simon.fincrm.dal.model.UserLevelDo;
 import com.simon.fincrm.service.facade.IUserLevel;
+import com.simon.fincrmprod.service.facade.api.UserLevelFacade;
+import com.simon.fincrmprod.service.facade.model.UserLevelModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,33 +17,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserLevelImpl implements IUserLevel {
     @Autowired
-    private UserLevelDao userLevelDao;
+    private UserLevelFacade userLevelFacade;
 
     public int deleteByPrimaryKey(Integer id) {
-        return userLevelDao.deleteByPrimaryKey(id);
+        return userLevelFacade.deleteByPrimaryKey(id);
     }
 
-    public int insert(UserLevelDo record) {
-        return userLevelDao.insert(record);
+    public int insert(UserLevelModel record) {
+        return userLevelFacade.insert(record);
     }
 
-    public int insertSelective(UserLevelDo record) {
-        return userLevelDao.insertSelective(record);
+    public int insertSelective(UserLevelModel record) {
+        return userLevelFacade.insertSelective(record);
     }
 
-    public UserLevelDo selectByPrimaryKey(Integer id) {
-        return userLevelDao.selectByPrimaryKey(id);
+    public UserLevelModel selectByPrimaryKey(Integer id) {
+        return userLevelFacade.selectByPrimaryKey(id);
     }
 
-    public UserLevelDo selectByUserId(Integer id) {
-        return userLevelDao.selectByUserId(id);
+    public UserLevelModel selectByUserId(Integer id) {
+        return userLevelFacade.selectByUserId(id);
     }
 
-    public int updateByPrimaryKeySelective(UserLevelDo record) {
-        return userLevelDao.updateByPrimaryKeySelective(record);
+    public int updateByPrimaryKeySelective(UserLevelModel record) {
+        return userLevelFacade.updateByPrimaryKeySelective(record);
     }
 
-    public int updateByPrimaryKey(UserLevelDo record) {
-        return userLevelDao.updateByPrimaryKey(record);
+    public int updateByPrimaryKey(UserLevelModel record) {
+        return userLevelFacade.updateByPrimaryKey(record);
     }
 }

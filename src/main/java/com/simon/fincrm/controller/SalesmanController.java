@@ -1,20 +1,19 @@
 package com.simon.fincrm.controller;
 
 import com.alibaba.druid.util.StringUtils;
-import com.simon.fincrm.dal.model.SalesmanManagerReationDo;
-import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
-import com.simon.fincrm.dal.model.UserInfoDo;
-import com.simon.fincrm.dal.model.UserLevelDo;
 import com.simon.fincrm.service.UserSecurityUtils;
 import com.simon.fincrm.service.entities.LoginUserInfo;
-import com.simon.fincrm.service.enums.UserLevelEnum;
 import com.simon.fincrm.service.facade.ISalesmanManagerReation;
 import com.simon.fincrm.service.facade.IUserInfo;
 import com.simon.fincrm.service.facade.IUserLevel;
-import com.simon.fincrm.service.interceptor.PageInterceptor;
-import com.simon.fincrm.service.result.CommonResult;
-import com.simon.fincrm.service.result.SalesmanInfoWithManagerResult;
-import org.apache.log4j.Logger;
+import com.simon.fincrmprod.service.facade.enums.UserLevelEnum;
+import com.simon.fincrmprod.service.facade.model.SalesmanManagerRelationModel;
+import com.simon.fincrmprod.service.facade.model.UserInfoModel;
+import com.simon.fincrmprod.service.facade.model.UserLevelModel;
+import com.simon.fincrmprod.service.facade.request.CommonInfoQueryRequest;
+import com.simon.fincrmprod.service.facade.result.CommonResult;
+import com.simon.fincrmprod.service.facade.result.SalesmanInfoWithManagerResult;
+import com.simon.fincrmprod.service.facade.result.UserInfoQueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -41,31 +40,31 @@ public class SalesmanController extends UserInfoBaseController {
     private ISalesmanManagerReation salesmanManagerReation;
 
     @RequestMapping("/list")
-    public String getList(ModelMap modelMap, @RequestParam(name = "id", required =  false, defaultValue = "-1") int id, @RequestParam(name = "name", required =  false) String searchName, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
+    public String getList(ModelMap modelMap, @RequestParam(name = "id", required = false, defaultValue = "-1") int id, @RequestParam(name = "name", required = false) String searchName, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) {
 
         LoginUserInfo loginLoginUserInfo = UserSecurityUtils.getCurrentUser();
 
-        PageInterceptor.startPage(pageNum, 20);
+        UserInfoQueryResult result;
 
-        List<UserInfoDo> result;
+        CommonInfoQueryRequest request = new CommonInfoQueryRequest();
+        request.setPageNum(pageNum);
+        request.setPageSize(20);
+
         if (id == -1) {
-            id = loginLoginUserInfo.getUserId();
+            request.setId(loginLoginUserInfo.getUserId());
         }
 
         if (StringUtils.isEmpty(searchName)) {
-            result = userInfo.selectByManageId(id);
+            result = userInfo.selectByManageId(request);
         } else {
-            SearchWithIdAndNameRequest request = new SearchWithIdAndNameRequest();
             request.setId(id);
             request.setName(searchName);
             result = userInfo.selectByManageIdAndSalesmanName(request);
         }
 
+        modelMap.addAttribute("pageInfo", result.getPageInfo());
 
-        PageInterceptor.Page page = PageInterceptor.endPage();
-        modelMap.addAttribute("pageInfo", page);
-
-        modelMap.addAttribute("salesmanList", result);
+        modelMap.addAttribute("salesmanList", result.getUserInfoModelList());
         return "salesman/list";
     }
 
@@ -79,17 +78,23 @@ public class SalesmanController extends UserInfoBaseController {
 
     @RequestMapping(value = "/getAllSalesman", method = RequestMethod.GET)
     @ResponseBody
-    public List<UserInfoDo> getAllSalesman() {
-        LoginUserInfo loginLoginUserInfo =  UserSecurityUtils.getCurrentUser();
-        List<UserInfoDo> result = userInfo.selectByManageId(loginLoginUserInfo.getUserId());
-        return result;
+    public List<UserInfoModel> getAllSalesman() {
+        LoginUserInfo loginLoginUserInfo = UserSecurityUtils.getCurrentUser();
+        CommonInfoQueryRequest request = new CommonInfoQueryRequest();
+        request.setId(loginLoginUserInfo.getUserId());
+
+        UserInfoQueryResult result = userInfo.selectByManageId(request);
+        return result.getUserInfoModelList();
     }
 
     @RequestMapping(value = "/getAllManager", method = RequestMethod.GET)
     @ResponseBody
-    public List<UserInfoDo> getAllManager() {
-        List<UserInfoDo> result = userInfo.selectByLevelId(UserLevelEnum.ROLE_SALESMANAGER.getLeveId());
-        return result;
+    public List<UserInfoModel> getAllManager() {
+        CommonInfoQueryRequest request = new CommonInfoQueryRequest();
+        request.setId(UserLevelEnum.ROLE_SALESMANAGER.getLeveId());
+
+        UserInfoQueryResult result = userInfo.selectByLevelId(request);
+        return result.getUserInfoModelList();
     }
 
     @RequestMapping(value = "update", method = RequestMethod.POST)
@@ -98,7 +103,7 @@ public class SalesmanController extends UserInfoBaseController {
         CommonResult commonResult = new CommonResult();
 
         try {
-            UserInfoDo userInfoDo = new UserInfoDo();
+            UserInfoModel userInfoDo = new UserInfoModel();
             userInfoDo.setId(info.getSalesmanId());
             userInfoDo.setUserName(info.getUserName());
             userInfoDo.setPhonenumber(info.getPhonenumber());
@@ -111,7 +116,7 @@ public class SalesmanController extends UserInfoBaseController {
 
             userInfo.updateByPrimaryKeySelective(userInfoDo);
 
-            SalesmanManagerReationDo salesmanManagerReationDo = salesmanManagerReation.selectBySalesmanId(info.getSalesmanId());
+            SalesmanManagerRelationModel salesmanManagerReationDo = salesmanManagerReation.selectBySalesmanId(info.getSalesmanId());
             salesmanManagerReationDo.setManagerId(info.getManagerId());
             salesmanManagerReation.updateByPrimaryKey(salesmanManagerReationDo);
 
@@ -131,7 +136,7 @@ public class SalesmanController extends UserInfoBaseController {
         CommonResult commonResult = new CommonResult();
 
         try {
-            UserInfoDo userInfoDo = new UserInfoDo();
+            UserInfoModel userInfoDo = new UserInfoModel();
             userInfoDo.setUserName(info.getUserName());
             userInfoDo.setPhonenumber(info.getPhonenumber());
             userInfoDo.setEmail(info.getEmail());
@@ -143,12 +148,12 @@ public class SalesmanController extends UserInfoBaseController {
             userInfoDo.setCreateTime(new Date());
             userInfo.insertSelective(userInfoDo);
 
-            SalesmanManagerReationDo salesmanManagerReationDo = new SalesmanManagerReationDo();
+            SalesmanManagerRelationModel salesmanManagerReationDo = new SalesmanManagerRelationModel();
             salesmanManagerReationDo.setSalesmanId(userInfoDo.getId());
             salesmanManagerReationDo.setManagerId(info.getManagerId());
             salesmanManagerReation.insertSelective(salesmanManagerReationDo);
 
-            UserLevelDo userLevelDo = new UserLevelDo();
+            UserLevelModel userLevelDo = new UserLevelModel();
             userLevelDo.setLevelId(UserLevelEnum.ROLE_SALESMAN.getLeveId());
             userLevelDo.setUserId(userInfoDo.getId());
             userLevel.insert(userLevelDo);

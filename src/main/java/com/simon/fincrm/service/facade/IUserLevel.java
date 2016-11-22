@@ -1,6 +1,7 @@
 package com.simon.fincrm.service.facade;
 
-import com.simon.fincrm.dal.model.UserLevelDo;
+
+import com.simon.fincrmprod.service.facade.model.UserLevelModel;
 
 /**
  * Created by jinshihao on 16/8/24.
@@ -8,15 +9,15 @@ import com.simon.fincrm.dal.model.UserLevelDo;
 public interface IUserLevel {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(com.simon.fincrm.dal.model.UserLevelDo record);
+    int insert(UserLevelModel record);
 
-    int insertSelective(com.simon.fincrm.dal.model.UserLevelDo record);
+    int insertSelective(UserLevelModel record);
 
-    UserLevelDo selectByPrimaryKey(Integer id);
+    UserLevelModel selectByPrimaryKey(Integer id);
 
-    UserLevelDo selectByUserId(Integer id);
+    UserLevelModel selectByUserId(Integer id);
 
-    int updateByPrimaryKeySelective(com.simon.fincrm.dal.model.UserLevelDo record);
+    int updateByPrimaryKeySelective(UserLevelModel record);
 
-    int updateByPrimaryKey(com.simon.fincrm.dal.model.UserLevelDo record);
+    int updateByPrimaryKey(UserLevelModel record);
 }

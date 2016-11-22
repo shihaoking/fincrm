@@ -4,9 +4,12 @@
  */
 package com.simon.fincrm.service.impl;
 
-import com.simon.fincrm.dal.dao.CustomerTraceLogDao;
-import com.simon.fincrm.dal.model.CustomerTraceLogDo;
+
 import com.simon.fincrm.service.facade.ICustomerTraceLog;
+import com.simon.fincrmprod.service.facade.api.CustomerTraceLogFacade;
+import com.simon.fincrmprod.service.facade.model.CustomerTraceLogModel;
+import com.simon.fincrmprod.service.facade.request.CommonInfoQueryRequest;
+import com.simon.fincrmprod.service.facade.result.CustomerTraceLogQueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,42 +23,42 @@ import java.util.List;
 public class CustomerTraceLogImpl implements ICustomerTraceLog {
 
     @Autowired
-    private CustomerTraceLogDao customerTraceLogDao;
+    private CustomerTraceLogFacade customerTraceLogFacade;
 
     public int deleteByPrimaryKey(Integer id) {
-        return customerTraceLogDao.deleteByPrimaryKey(id);
+        return customerTraceLogFacade.deleteByPrimaryKey(id);
     }
 
-    public int insert(CustomerTraceLogDo record) {
-        return customerTraceLogDao.insert(record);
+    public int insert(CustomerTraceLogModel record) {
+        return customerTraceLogFacade.insert(record);
     }
 
-    public int insertSelective(CustomerTraceLogDo record) {
-        return customerTraceLogDao.insertSelective(record);
+    public int insertSelective(CustomerTraceLogModel record) {
+        return customerTraceLogFacade.insertSelective(record);
     }
 
-    public CustomerTraceLogDo selectByPrimaryKey(Integer id) {
-        return customerTraceLogDao.selectByPrimaryKey(id);
+    public CustomerTraceLogModel selectByPrimaryKey(Integer id) {
+        return customerTraceLogFacade.selectByPrimaryKey(id);
     }
 
-    public List<CustomerTraceLogDo> selectByCustomerId(Integer customerId) {
-        return customerTraceLogDao.selectByCustomerId(customerId);
+    public CustomerTraceLogQueryResult selectByCustomerId(CommonInfoQueryRequest request) {
+        return customerTraceLogFacade.selectByCustomerId(request);
     }
 
-    public List<CustomerTraceLogDo> selectBySalesmanId(Integer salesmanId) {
-        return customerTraceLogDao.selectBySalesmanId(salesmanId);
+    public CustomerTraceLogQueryResult selectBySalesmanId(CommonInfoQueryRequest request) {
+        return customerTraceLogFacade.selectBySalesmanId(request);
     }
 
-    public List<CustomerTraceLogDo> selectByManagerId(Integer managerId) {
-        return customerTraceLogDao.selectByManagerId(managerId);
+    public CustomerTraceLogQueryResult selectByManagerId(CommonInfoQueryRequest request) {
+        return customerTraceLogFacade.selectByManagerId(request);
     }
 
 
-    public int updateByPrimaryKeySelective(CustomerTraceLogDo record) {
-        return customerTraceLogDao.updateByPrimaryKeySelective(record);
+    public int updateByPrimaryKeySelective(CustomerTraceLogModel record) {
+        return customerTraceLogFacade.updateByPrimaryKeySelective(record);
     }
 
-    public int updateByPrimaryKey(CustomerTraceLogDo record) {
-        return customerTraceLogDao.updateByPrimaryKey(record);
+    public int updateByPrimaryKey(CustomerTraceLogModel record) {
+        return customerTraceLogFacade.updateByPrimaryKey(record);
     }
 }

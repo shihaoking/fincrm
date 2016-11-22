@@ -1,17 +1,14 @@
 package com.simon.fincrm.service.impl;
 
-import com.simon.fincrm.dal.dao.CustomerInfoDao;
-import com.simon.fincrm.dal.dao.SalesmanCustomerRelationDao;
-import com.simon.fincrm.dal.model.CustomerInfoDo;
-import com.simon.fincrm.dal.model.CustomerTraceLogDo;
-import com.simon.fincrm.dal.model.SalesmanCustomerRelationDo;
-import com.simon.fincrm.dal.model.SearchWithIdAndNameRequest;
+
 import com.simon.fincrm.service.facade.ICustomerInfo;
-import com.simon.fincrm.service.result.CustomerInfoWithSalesmanResult;
+import com.simon.fincrmprod.service.facade.api.CustomerInfoFacade;
+import com.simon.fincrmprod.service.facade.model.CustomerInfoModel;
+import com.simon.fincrmprod.service.facade.request.CommonInfoQueryRequest;
+import com.simon.fincrmprod.service.facade.result.CustomerInfoQueryResult;
+import com.simon.fincrmprod.service.facade.result.CustomerInfoWithSalesmanResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created by jinshihao on 16/8/24.
@@ -20,75 +17,54 @@ import java.util.List;
 public class CustomerInfoImpl implements ICustomerInfo {
 
     @Autowired
-    private CustomerInfoDao customerInfoDao;
-
-    @Autowired
-    private SalesmanCustomerRelationDao salesmanCustomerRelationDao;
+    private CustomerInfoFacade customerInfoFacade;
 
     public int deleteByPrimaryKey(Integer id) {
-        return customerInfoDao.deleteByPrimaryKey(id);
+        return customerInfoFacade.deleteByPrimaryKey(id);
     }
 
-    public int insert(CustomerInfoDo record) {
-        return customerInfoDao.insert(record);
+    public int insert(CustomerInfoModel record) {
+        return customerInfoFacade.insert(record);
     }
 
-    public int insertSelective(CustomerInfoDo record) {
-        return customerInfoDao.insertSelective(record);
+    public int insertSelective(CustomerInfoModel record) {
+        return customerInfoFacade.insertSelective(record);
     }
 
-    public CustomerInfoDo selectByPrimaryKey(Integer id) {
-        return customerInfoDao.selectByPrimaryKey(id);
+    public CustomerInfoModel selectByPrimaryKey(Integer id) {
+        return customerInfoFacade.selectByPrimaryKey(id);
     }
 
-    public List<CustomerInfoDo> getBySalesmanId(Integer customerId) {
-        return customerInfoDao.getBySalesmanId(customerId);
+    public CustomerInfoQueryResult getBySalesmanId(CommonInfoQueryRequest request) {
+        return customerInfoFacade.getBySalesmanId(request);
     }
 
-    public List<CustomerInfoDo> getBySalesmanIdAndCustomerName(SearchWithIdAndNameRequest request) {
-        return customerInfoDao.getBySalesmanIdAndCustomerName(request);
+    public CustomerInfoQueryResult getBySalesmanIdAndCustomerName(CommonInfoQueryRequest request) {
+        return customerInfoFacade.getBySalesmanIdAndCustomerName(request);
     }
 
-    public List<CustomerInfoDo> getByManagerIdAndCustomerName(SearchWithIdAndNameRequest request) {
-        return customerInfoDao.getByManagerIdAndCustomerName(request);
+    public CustomerInfoQueryResult getByManagerIdAndCustomerName(CommonInfoQueryRequest request) {
+        return customerInfoFacade.getByManagerIdAndCustomerName(request);
     }
 
-    public List<CustomerInfoDo> getByManagerId(Integer id) {
-        return customerInfoDao.getByManagerId(id);
+    public CustomerInfoQueryResult getByManagerId(CommonInfoQueryRequest request) {
+        return customerInfoFacade.getByManagerId(request);
     }
 
-    public List<CustomerInfoDo> selectAll(Boolean status){
-        return  customerInfoDao.selectAll(status);
+    public CustomerInfoQueryResult selectAll(CommonInfoQueryRequest request){
+        return  customerInfoFacade.selectAll(request);
     }
 
-    public int updateByPrimaryKeySelective(CustomerInfoDo record) {
-        return customerInfoDao.updateByPrimaryKeySelective(record);
+    public int updateByPrimaryKeySelective(CustomerInfoModel record) {
+        return customerInfoFacade.updateByPrimaryKeySelective(record);
     }
 
-    public int updateByPrimaryKey(CustomerInfoDo record) {
-        return customerInfoDao.updateByPrimaryKey(record);
+    public int updateByPrimaryKey(CustomerInfoModel record) {
+        return customerInfoFacade.updateByPrimaryKey(record);
     }
 
     public CustomerInfoWithSalesmanResult getCustomerInfoWithSalesman(Integer customerId) {
-        CustomerInfoDo customerInfoDo = customerInfoDao.selectByPrimaryKey(customerId);
-        SalesmanCustomerRelationDo salesmanCustomerRelationDo = salesmanCustomerRelationDao.selectByCustomerId(customerId);
-
-        CustomerInfoWithSalesmanResult result = new CustomerInfoWithSalesmanResult();
-        result.setCustomerId(customerInfoDo.getId());
-        result.setCustomerName(customerInfoDo.getCustomerName());
-        result.setPhoneNumber(customerInfoDo.getPhoneNumber());
-        result.setEmail(customerInfoDo.getEmail());
-        result.setCreator(customerInfoDo.getCreator());
-        result.setCreateTime(customerInfoDo.getCreateTime());
-        result.setStatus(customerInfoDo.getStatus());
-
-        if(salesmanCustomerRelationDo != null) {
-            result.setSalesmanId(salesmanCustomerRelationDo.getSalesmanId());
-        }else {
-            result.setSalesmanId(-1);
-        }
-
-        return result;
+        return customerInfoFacade.getCustomerInfoWithSalesman(customerId);
     }
 
 
