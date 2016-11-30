@@ -17,8 +17,7 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:spring/service-impl.xml
-            classpath:spring/spring-security.xml
+            WEB-INF/fincrm-servlet.xml
         </param-value>
     </context-param>
 

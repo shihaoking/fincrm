@@ -3,10 +3,12 @@ package com.simon.fincrm.controller;
 import com.alibaba.druid.util.StringUtils;
 import com.simon.fincrm.service.UserSecurityUtils;
 import com.simon.fincrm.service.entities.LoginUserInfo;
+import com.simon.fincrm.service.facade.RedisClient;
 import com.simon.fincrm.service.facade.ICustomerInfo;
 import com.simon.fincrm.service.facade.ISalesmanCustomerRelation;
 import com.simon.fincrm.service.facade.IUserInfo;
 import com.simon.fincrm.service.facade.IUserLevel;
+import com.simon.fincrm.service.util.CommonCacheKey;
 import com.simon.fincrmprod.service.facade.enums.UserLevelEnum;
 import com.simon.fincrmprod.service.facade.model.*;
 import com.simon.fincrmprod.service.facade.request.CommonInfoQueryRequest;
@@ -14,6 +16,7 @@ import com.simon.fincrmprod.service.facade.result.CommonResult;
 import com.simon.fincrmprod.service.facade.result.CustomerInfoQueryResult;
 import com.simon.fincrmprod.service.facade.result.CustomerInfoWithSalesmanResult;
 import com.simon.fincrmprod.service.facade.result.UserInfoQueryResult;
+import org.apache.ibatis.cache.CacheKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -42,44 +45,55 @@ public class CustomerController {
     @Autowired
     private IUserLevel userLevel;
 
+    @Autowired
+    private RedisClient redisClient;
+
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String getList(ModelMap modelMap, @RequestParam(name = "id", required = false, defaultValue = "-1") int id, @RequestParam(name = "name", required = false) String name, @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum) throws IOException {
         CustomerInfoQueryResult result;
         LoginUserInfo loginLoginUserInfo = UserSecurityUtils.getCurrentUser();
+        String cacheKey = String.format(CommonCacheKey.GETLIST_CUSTOMER_INFO_CACHE_KEY, id == -1 ? loginLoginUserInfo.getUserId() : id, name, pageNum);
 
-        CommonInfoQueryRequest request = new CommonInfoQueryRequest();
-        request.setPageNum(pageNum);
-        request.setPageSize(20);
+        result = (CustomerInfoQueryResult) redisClient.get(cacheKey);
 
-        if (id != -1) {
-            request.setId(id);
+        if(result == null) {
+            CommonInfoQueryRequest request = new CommonInfoQueryRequest();
+            request.setPageNum(pageNum);
+            request.setPageSize(20);
 
-            if(StringUtils.isEmpty(name)) {
-                result = customerInfo.getBySalesmanId(request);
-            }else {
-                request.setName(name);
-                result = customerInfo.getBySalesmanIdAndCustomerName(request);
-            }
+            if (id != -1) {
+                request.setId(id);
 
-        } else {
-
-            if(StringUtils.isEmpty(name)) {
-                if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMANAGER.name())) {
-                    request.setId(loginLoginUserInfo.getUserId());
-                    result = customerInfo.getByManagerId(request);
-                }else{
-                    request.setId(loginLoginUserInfo.getUserId());
+                if (StringUtils.isEmpty(name)) {
                     result = customerInfo.getBySalesmanId(request);
-                }
-            }else{
-                request.setId(loginLoginUserInfo.getUserId());
-                request.setName(name);
-
-                if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMANAGER.name())) {
-                    result = customerInfo.getByManagerIdAndCustomerName(request);
-                }else{
+                } else {
+                    request.setName(name);
                     result = customerInfo.getBySalesmanIdAndCustomerName(request);
                 }
+
+            } else {
+                if (StringUtils.isEmpty(name)) {
+                    if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMANAGER.name())) {
+                        request.setId(loginLoginUserInfo.getUserId());
+                        result = customerInfo.getByManagerId(request);
+                    } else {
+                        request.setId(loginLoginUserInfo.getUserId());
+                        result = customerInfo.getBySalesmanId(request);
+                    }
+                } else {
+                    request.setId(loginLoginUserInfo.getUserId());
+                    request.setName(name);
+
+                    if (UserSecurityUtils.hasAnyRole(UserLevelEnum.ROLE_SALESMANAGER.name())) {
+                        result = customerInfo.getByManagerIdAndCustomerName(request);
+                    } else {
+                        result = customerInfo.getBySalesmanIdAndCustomerName(request);
+                    }
+                }
+            }
+
+            if(result != null) {
+                redisClient.add(cacheKey, result);
             }
         }
 
@@ -88,7 +102,6 @@ public class CustomerController {
 
         modelMap.addAttribute("pageInfo", pageInfo);
         modelMap.addAttribute("customerList", customerInfoModels);
-
 
         CommonInfoQueryRequest salesmaQrequest = new CommonInfoQueryRequest();
         salesmaQrequest.setId(loginLoginUserInfo.getUserId());
