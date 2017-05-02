@@ -10,7 +10,7 @@
        http://cxf.apache.org/schemas/jaxws.xsd">
 
     <context:property-placeholder location="classpath:service.properties" ignore-unresolvable="true"></context:property-placeholder>
-    <context:component-scan base-package="com.simon.fincrm.service"></context:component-scan>
+    <context:component-scan base-package="com.simon.fincrmweb.service"></context:component-scan>
 
     <jaxws:client id="customerInfo"
                   serviceClass="com.simon.fincrmprod.service.facade.api.CustomerInfoFacade"

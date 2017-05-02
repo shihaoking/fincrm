@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.simon.fincrm</groupId>
-    <artifactId>fincrm-parent</artifactId>
+    <groupId>com.simon.fincrmweb</groupId>
+    <artifactId>fincrmweb-parent</artifactId>
     <packaging>war</packaging>
     <version>1.0.0</version>
     <name>fincrm-parent Maven Webapp</name>
@@ -129,6 +129,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>fincrm-parent</finalName>
+        <finalName>fincrmweb-parent</finalName>
     </build>
 </project>

@@ -6,7 +6,7 @@
                       http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <display-name>fincrm</display-name>
+    <display-name>fincrmweb</display-name>
 
 
     <context-param>
@@ -17,7 +17,7 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            WEB-INF/fincrm-servlet.xml
+            WEB-INF/fincrmweb-servlet.xml
         </param-value>
     </context-param>
 
@@ -50,13 +50,13 @@
     </filter-mapping>
 
     <servlet>
-        <servlet-name>fincrm</servlet-name>
+        <servlet-name>fincrmweb</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>fincrm</servlet-name>
+        <servlet-name>fincrmweb</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
